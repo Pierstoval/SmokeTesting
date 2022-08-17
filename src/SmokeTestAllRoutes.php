@@ -16,7 +16,7 @@ trait SmokeTestAllRoutes
     public function provideRouteCollection(): \Generator
     {
         if (!$this instanceof WebTestCase) {
-            throw new \Exception(\sprintf("This trait can only be used in an instance of %s", WebTestCase::class));
+            throw new \Exception(\sprintf('The "%s" trait trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
         }
 
         static::bootKernel();

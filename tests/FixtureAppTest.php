@@ -9,7 +9,7 @@ class FixtureAppTest extends \PHPUnit\Framework\TestCase
     /**
      * @return string The test process output.
      */
-    private function runFixtureTest(string $routeName): Process
+    private function runFixtureTest(string $testsCasesFilter): Process
     {
         $fixtureAppDir = \dirname(__DIR__).'/fixture-app';
         $phpunitPath = $fixtureAppDir.'/vendor/bin/phpunit';
@@ -19,7 +19,7 @@ class FixtureAppTest extends \PHPUnit\Framework\TestCase
             $phpunitPath,
             '--color=never',
             '--testdox',
-            '--filter='.$routeName,
+            '--filter='.$testsCasesFilter,
         ];
 
         $testProcess = new Process($phpunitCommand, $fixtureAppDir, timeout: 5);
@@ -59,5 +59,32 @@ class FixtureAppTest extends \PHPUnit\Framework\TestCase
 
         self::assertStringContainsString(sprintf("✘ Routes do not return http 500 with data set \"%s\"", $routeName), $stdout);
         self::assertStringContainsString(\sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", $routeName), $stdout);
+    }
+
+    public function testFunctionalGet200(): void
+    {
+        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet200');
+        $stdout = $testProcess->getOutput();
+
+        self::assertStringContainsString('✔ Get 200', $stdout);
+        self::assertStringContainsString('OK (1 test, 3 assertions)', $stdout);
+    }
+
+    public function testFunctionalGetWithEmptyPayload(): void
+    {
+        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetWithEmptyPayload');
+        $stdout = $testProcess->getOutput();
+
+        self::assertStringContainsString('✔ Get with empty payload', $stdout);
+        self::assertStringContainsString('OK (1 test, 2 assertions)', $stdout);
+    }
+
+    public function testFunctionalGetWithPayload(): void
+    {
+        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetWithPayload');
+        $stdout = $testProcess->getOutput();
+
+        self::assertStringContainsString('✔ Get with payload', $stdout);
+        self::assertStringContainsString('OK (1 test, 3 assertions)', $stdout);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,14 @@ class TestRoutesController extends AbstractController
     public function get400(): Response
     {
         return new Response('400', 400);
+    }
+
+    #[Route("/payload", name: "get_with_payload")]
+    public function getWithPayload(Request $request): Response
+    {
+        $payload = $request->getContent();
+
+        return new Response($payload, $payload ? 200 : 400);
     }
 
     #[Route("/500", name: "get_500")]

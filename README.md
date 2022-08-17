@@ -14,10 +14,11 @@ composer require pierstoval/smoke-testing
 
 * Configure PHPUnit for your application.
 * Create a test case extending Symfony's `WebTestCase` class.
+
+### Smoke test ALL routes
+
 * Add the `SmokeTestAllRoutes` trait to your class.
 * Run PHPUnit.
-
-### Test case example
 
 ```php
 <?php
@@ -33,8 +34,40 @@ class AllRoutesTest extends WebTestCase
 }
 ```
 
-## What does it do?
+#### What does it do?
 
 The `SmokeTestAllRoutes` trait will find all HTTP routes of your application by using Symfony's Router, and will run a simple HTTP request on each by using Symfony's HTTP Client.<br>
 If the request returns an HTTP 500, the test will fail.<br>
 Otherwise, even with HTTP 4**, the test will suceed.
+
+### Smoke test routes **manually**
+
+* Add the `FunctionalSmokeTester` trait to your class.
+* Create functional test data using the `FunctionalTestData` class.
+* Execute the `$this->runFunctionalTest` method in your test case with your `FunctionalTestData` instance as first argument.
+* Run PHPUnit.
+
+```php
+<?php
+
+namespace App\Tests;
+
+use Pierstoval\SmokeTesting\FunctionalSmokeTester;
+use Pierstoval\SmokeTesting\FunctionalTestData;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class AllRoutesTest extends WebTestCase
+{
+    use FunctionalSmokeTester; // Allows using the "$this->runFunctionalTest()" method.
+    
+    public function testGet200(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/my-route')
+                ->expectRouteName('my_successful_route')
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('Hello world!')
+        );
+    }
+}
+```
