@@ -1,0 +1,24 @@
+{
+    "name": "pierstoval/smoke-testing",
+    "type": "library",
+    "license": "LGPL-3.0-or-later",
+    "description": "Smoke testing automator for Symfony applications",
+    "autoload": {
+        "psr-4": {
+            "Pierstoval\\SmokeTesting\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alex Rock Ancelet",
+            "email": "pierstoval@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">= 8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "symfony/process": "^6.1"
+    }
+}
