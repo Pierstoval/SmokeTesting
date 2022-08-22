@@ -21,7 +21,7 @@ Plus, adding **manual testing** (see the [Smoke-test routes manually](#smoke-tes
 ## Installation
 
 ```
-composer require pierstoval/smoke-testing
+composer require --dev pierstoval/smoke-testing
 ```
 
 ## Usage
