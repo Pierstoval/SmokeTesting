@@ -14,6 +14,10 @@ To smoke-test an app, it is common to execute many parts of the app itself and j
 
 In the world of web development, smoke testing is often about opening all pages of a website and making sure they don't return an HTTP server error (status code > 500), and sometimes testing 404 or other HTTP client error codes.
 
+Another **really important** use of smoke testing is when you work on big legacy projects that have no tests and/or no documentation.<br>
+Running basic smoke testing (like when using this library) **comes with a very low cost** and can **check the whole project's average health**.<br>
+Plus, adding **manual testing** (see the [Smoke-test routes manually](#smoke-test-routes-manually) section) allows you to have **more control** and more **advanced settings** for your tests (such as adding HTTP headers, making expectations on page content, etc.).
+
 ## Installation
 
 ```
@@ -22,8 +26,10 @@ composer require pierstoval/smoke-testing
 
 ## Usage
 
-* Configure PHPUnit for your application.
-* Create a test case extending Symfony's `WebTestCase` class.
+* Configure PHPUnit for your application (see the [Testing](https://symfony.com/doc/current/testing.html) section on Symfony docs).
+* Create a test case extending Symfony's `WebTestCase` class (the base for functional testing in Symfony).
+
+Now choose between [smoke testing all your routes at once](#smoke-test-all-routes) or [smoke testing routes manually](#smoke-test-routes-manually) (see below).
 
 ### Smoke test ALL routes
 
@@ -46,15 +52,27 @@ class AllRoutesTest extends WebTestCase
 }
 ```
 
+That's it!
+
+You need to set this up only once in your project.
+
 #### What does it do?
 
-The `SmokeTestAllRoutes` trait will **find all HTTP routes** of your application by using the Symfony Router, and will **run a simple HTTP request on each** by using Symfony's HTTP Client.<br>
+The `SmokeTestAllRoutes` trait already contains a PHPUnit test that will **find all HTTP routes** of your application by using the Symfony Router, and will **run a simple HTTP request on each** by using Symfony's HTTP Client.<br>
 If the request returns an HTTP status code **>= 500**, the test will **fail**.<br>
 **Otherwise**, even with HTTP 400 or 404, the test will **suceed**.
+
+As said in the intro, 4** HTTP codes can be perfectly normal and expected, like when you have some sections of your app that depend on authentication.
+
+> On a personal note, I recommend you create tests for at least 400/401/403 codes on your projects.
+> Most of them are based on client input that has to be validated, or authentication, which are critical entry points of your application, and therefore must be thoroughly tested.
 
 ### Smoke-test routes **manually**
 
 Instead of (or conjointedly to) checking all routes of your app, you can run a list of URLs of your choice and have control on all request parameters and test assertions/expectations.
+
+> That is the method I would recommend for a gentle and graceful start with smoke testing,
+> because this method gives you a lot of control on your tests, allowing you to create tests that are way more exhaustive than simple smoke tests (making them more like functional tests, in the end).
 
 * Add the `FunctionalSmokeTester` trait to your class.
 * Create functional test data using the `FunctionalTestData` class (see example below).
