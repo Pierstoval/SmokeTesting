@@ -137,7 +137,7 @@ class AllRoutesTest extends WebTestCase
                 ->expectTextToBePresent('Hello world!');
 
         yield '/my-other-route' => FunctionalTestData::withUrl('/my-other-route')
-                ->withHttpHeader('Authorization', 'Authorization: Bearer 2d5b0cfb531745668')
+                ->withHttpHeader('Authorization', 'Bearer 2d5b0cfb531745668')
                 ->expectRouteName('my_other_route')
                 ->expectStatusCode(200)
                 ->expectTextToBePresent('{"message": "Bonjour!"}');
