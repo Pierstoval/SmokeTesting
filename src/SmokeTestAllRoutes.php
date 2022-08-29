@@ -2,8 +2,8 @@
 
 namespace Pierstoval\SmokeTesting;
 
-use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
@@ -21,7 +21,6 @@ trait SmokeTestAllRoutes
 
         static::bootKernel();
 
-        /** @var TestContainer $container */
         $container = static::getContainer();
 
         /** @var RouteCollection $routes */
@@ -57,9 +56,9 @@ trait SmokeTestAllRoutes
 
             $response = $client->getResponse();
             static::assertLessThan(
-                500,
+                Response::HTTP_INTERNAL_SERVER_ERROR,
                 $response->getStatusCode(),
-                \sprintf('Route "%s" returned a 500 error with HTTP method "%s".', $routeName, $method),
+                \sprintf('Route "%s" returned a %d error with HTTP method "%s". Response content: %s', $routeName, $response->getStatusCode(), $method, $response->getContent()),
             );
         }
     }
