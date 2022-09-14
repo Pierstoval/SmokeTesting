@@ -2,6 +2,8 @@
 
 namespace Pierstoval\SmokeTesting;
 
+use function count;
+
 class FunctionalTestData {
     // Request information
     private readonly string $url;
@@ -17,6 +19,10 @@ class FunctionalTestData {
     private ?string $expectRedirectUrl = null;
     private ?string $expectCssSelector = null;
     private ?string $expectText = null;
+    private bool $expectIsJsonResponse = false;
+    /** @var array<callable> */
+    private array $expectationCallables = [];
+    private ?array $expectJsonParts = null;
 
     private function __construct(string $url)
     {
@@ -30,6 +36,9 @@ class FunctionalTestData {
             || $this->expectRedirectUrl !== null
             || $this->expectCssSelector !== null
             || $this->expectText !== null
+            || $this->expectIsJsonResponse !== false
+            || count($this->expectationCallables) > 0
+            || $this->expectJsonParts !== null
         ;
     }
 
@@ -49,7 +58,7 @@ class FunctionalTestData {
     public function withMethod(string $method): self
     {
         $new = clone $this;
-        $new->withMethod = $method;
+        $new->withMethod = strtoupper($method);
 
         return $new;
     }
@@ -125,6 +134,30 @@ class FunctionalTestData {
         return $new;
     }
 
+    public function appendCallableExpectation(callable $callable): self
+    {
+        $new = clone $this;
+        $new->expectationCallables[] = $callable;
+
+        return $new;
+    }
+
+    public function expectIsJsonResponse(): self
+    {
+        $new = clone $this;
+        $new->expectIsJsonResponse = true;
+
+        return $new;
+    }
+
+    public function expectJsonParts(array $jsonParts): self
+    {
+        $new = clone $this->expectIsJsonResponse();
+        $new->expectJsonParts = $jsonParts;
+
+        return $new;
+    }
+
     public function getUrl(): string
     {
         return $this->url;
@@ -178,5 +211,20 @@ class FunctionalTestData {
     public function getExpectedText(): ?string
     {
         return $this->expectText;
+    }
+
+    public function getExpectationCallables(): array
+    {
+        return $this->expectationCallables;
+    }
+
+    public function getIsJsonResponseExpectation(): bool
+    {
+        return $this->expectIsJsonResponse;
+    }
+
+    public function getExpectedJsonParts(): ?array
+    {
+        return $this->expectJsonParts;
     }
 }

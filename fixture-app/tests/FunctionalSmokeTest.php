@@ -41,4 +41,39 @@ class FunctionalSmokeTest extends WebTestCase
                 ->expectTextToBePresent($payload)
         );
     }
+
+    public function testGetWithValidJson(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/json/valid')
+                ->expectRouteName('json_valid')
+                ->expectStatusCode(200)
+                ->expectJsonParts([
+                    'message' => 'Ok!',
+                    'code' => 200,
+                ])
+        );
+    }
+
+    public function testGetWithMissingJsonResponseHeader(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/json/missing_header')
+                ->expectRouteName('json_missing_header')
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('{"message":"I miss the JSON response header!","code":200}')
+                ->expectIsJsonResponse()
+        );
+    }
+
+    public function testGetWithInvalidJson(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/json/invalid')
+                ->expectRouteName('json_invalid')
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('{"message":')
+                ->expectIsJsonResponse()
+        );
+    }
 }

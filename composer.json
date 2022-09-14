@@ -8,6 +8,11 @@
             "Pierstoval\\SmokeTesting\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Pierstoval\\SmokeTesting\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Alex Rock Ancelet",

@@ -29,9 +29,7 @@ composer require --dev pierstoval/smoke-testing
 * Configure PHPUnit for your application (see the [Testing](https://symfony.com/doc/current/testing.html) section on Symfony docs).
 * Create a test case extending Symfony's `WebTestCase` class (the base for functional testing in Symfony).
 
-Now choose between [smoke testing all your routes at once](#smoke-test-all-routes) or [smoke testing routes manually](#smoke-test-routes-manually) (see below).
-
-### Smoke test ALL routes
+### 🌊 Smoke test ALL routes
 
 * Add the `SmokeTestAllRoutes` trait to your class.
 * Run PHPUnit.
@@ -56,7 +54,7 @@ That's it!
 
 You need to set this up only once in your project.
 
-#### What does it do?
+What does it do?
 
 The `SmokeTestAllRoutes` trait already contains a PHPUnit test that will **find all HTTP routes** of your application by using the Symfony Router, and will **run a simple HTTP request on each** by using Symfony's HTTP Client.<br>
 If the request returns an HTTP status code **>= 500**, the test will **fail**.<br>
@@ -67,7 +65,7 @@ As said in the intro, 4** HTTP codes can be perfectly normal and expected, like 
 > On a personal note, I recommend you create tests for at least 400/401/403 codes on your projects.
 > Most of them are based on client input that has to be validated, or authentication, which are critical entry points of your application, and therefore must be thoroughly tested.
 
-### Smoke-test routes **manually**
+### 🔬 Smoke test routes **manually**
 
 Instead of (or conjointedly to) checking all routes of your app, you can run a list of URLs of your choice and have control on all request parameters and test assertions/expectations.
 
@@ -144,3 +142,8 @@ class AllRoutesTest extends WebTestCase
     }
 }
 ```
+
+The whole API of the `FunctionalTestData` class is explained there:
+
+* [List of available Request data/input](./docs/RequestData.md)
+* [List of available expectations](./docs/Expectations.md)

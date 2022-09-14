@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -40,5 +41,31 @@ class TestRoutesController extends AbstractController
     public function get500(): Response
     {
         return new Response('500', 500);
+    }
+
+    #[Route("/json/valid", name: "json_valid")]
+    public function getValidJson(): Response
+    {
+        return new JsonResponse([
+            'message' => 'Ok!',
+            'code' => 200,
+        ]);
+    }
+
+    #[Route("/json/missing_header", name: "json_missing_header")]
+    public function getJsonInvalidHeader(): Response
+    {
+        return new Response(json_encode([
+            'message' => 'I miss the JSON response header!',
+            'code' => 200,
+        ]));
+    }
+
+    #[Route("/json/invalid", name: "json_invalid")]
+    public function getJsonInvalid(): Response
+    {
+        return new Response('{"message":', 200, [
+            'Content-Type' => 'application/json',
+        ]);
     }
 }
