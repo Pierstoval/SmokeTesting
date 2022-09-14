@@ -1,8 +1,10 @@
-# SmokeTesting with Symfony
+# Smoke Testing with Symfony
 
-A very small lib that you can use to create tons of smoke tests for your Symfony application.
+A very small lib meant to ease writing simple tests for your Symfony applications.
 
 Particularly useful for big untested Symfony legacy projects.
+
+This lib was originally inspired by a [tweet from @SmaineDev](https://twitter.com/SmaineDev/status/1559542937696043008), you can find him on [his Github (@ismail1432)](https://github.com/ismail1432) too.
 
 ## Why smoke testing
 
