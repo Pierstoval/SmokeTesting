@@ -29,6 +29,8 @@ composer require --dev pierstoval/smoke-testing
 * Configure PHPUnit for your application (see the [Testing](https://symfony.com/doc/current/testing.html) section on Symfony docs).
 * Create a test case extending Symfony's `WebTestCase` class (the base for functional testing in Symfony).
 
+Now choose between [smoke testing all your routes at once](#-smoke-test-all-routes) or [smoke testing routes manually](#-smoke-test-routes-manually) (see below).
+
 ### 🌊 Smoke test ALL routes
 
 * Add the `SmokeTestAllRoutes` trait to your class.
