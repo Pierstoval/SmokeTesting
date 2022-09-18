@@ -6,9 +6,6 @@ use App\Tests\FunctionalSmokeTest;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestResult;
-use function sprintf;
-
-const NL = DIRECTORY_SEPARATOR === '\\' ? "\r\n" : "\n";
 
 require_once __DIR__.'/../fixture-app/tests/bootstrap.php';
 

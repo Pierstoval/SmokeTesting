@@ -35,7 +35,7 @@ Now choose between [smoke testing all your routes at once](#-smoke-test-all-rout
 
 ### 🌊 Smoke test ALL routes
 
-* Add the `SmokeTestAllRoutes` trait to your class.
+* Add the `SmokeTestStaticRoutes` trait to your class.
 * Run PHPUnit.
 
 Example:
@@ -45,12 +45,12 @@ Example:
 
 namespace App\Tests;
 
-use Pierstoval\SmokeTesting\SmokeTestAllRoutes;
+use Pierstoval\SmokeTesting\SmokeTestStaticRoutes;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AllRoutesTest extends WebTestCase
 {
-    use SmokeTestAllRoutes; // This does all the trick!
+    use SmokeTestStaticRoutes; // This does all the trick!
 }
 ```
 
@@ -60,9 +60,17 @@ You need to set this up only once in your project.
 
 What does it do?
 
-The `SmokeTestAllRoutes` trait already contains a PHPUnit test that will **find all HTTP routes** of your application by using the Symfony Router, and will **run a simple HTTP request on each** by using Symfony's HTTP Client.<br>
+The `SmokeTestStaticRoutes` trait already contains a PHPUnit test that will **find all static routes** of your application by using the Symfony Router, and will **run a single HTTP request on each** by using Symfony's HTTP Client.<br>
 If the request returns an HTTP status code **>= 500**, the test will **fail**.<br>
 **Otherwise**, even with HTTP 400 or 404, the test will **suceed**.
+
+**Note:** This trait **will also look for your non-static routes**! Routes that have `defaults` for all their dynamic parameters will be included in the smoke test suite, maximizing the number of testable routes when possible.
+
+> What is a static route?<br>
+> To sum it up quickly, `/api/endpoint` is a static route because it does not have any dynamic parameter.<br>
+> On the other hand, `/{_locale}/posts` is not static, because it contains the `{_locale}` parameter that is dynamic.
+> 
+> If your route contains `defaults` for all its `{...}` dynamic parameters, it means the Symfony Router is capable of generating an URL without having to pass these parameters to it, therefore it is smoke-testable by this package.
 
 As said in the intro, 4** HTTP codes can be perfectly normal and expected, like when you have some sections of your app that depend on authentication.
 
