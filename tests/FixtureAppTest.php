@@ -8,6 +8,8 @@ use Symfony\Component\Process\Process;
 use function dirname;
 use function sprintf;
 
+const NL = DIRECTORY_SEPARATOR === '\\' ? "\r\n" : "\n";
+
 class FixtureAppTest extends TestCase
 {
     private function runFixtureTest(string $testsCasesFilter): Process
@@ -34,35 +36,35 @@ class FixtureAppTest extends TestCase
         return $testProcess;
     }
 
-    public static function provideSuccessfulRoutes(): Generator
+    public function testGet200(): void
     {
-        yield 'get_200' => ['get_200'];
-        yield 'get_400' => ['get_400'];
-    }
-
-    /**
-     * @dataProvider provideSuccessfulRoutes
-     */
-    public function testGetOk(string $routeName): void
-    {
-        $testProcess = $this->runFixtureTest($routeName);
+        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet200');
         $stdout = $testProcess->getOutput();
 
-        self::assertStringContainsString(sprintf("✔ Routes do not return http 500 with data set \"%s\"", $routeName), $stdout);
+        self::assertStringContainsString("✔ Get 200", $stdout);
         self::assertStringContainsString(
-            sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", $routeName), $stdout);
+            sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", 'get_200'), $stdout);
+    }
+
+    public function testGet400(): void
+    {
+        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet400');
+        $stdout = $testProcess->getOutput();
+
+        self::assertStringContainsString("✔ Get 400", $stdout);
+        self::assertStringContainsString(
+            sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", 'get_400'), $stdout);
     }
 
     public function testGet500(): void
     {
         $routeName = 'get_500';
-        $testProcess = $this->runFixtureTest($routeName);
+        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet500');
         $stdout = $testProcess->getOutput();
 
-        self::assertStringContainsString(sprintf("✘ Routes do not return http 500 with data set \"%s\"", $routeName), $stdout);
+        self::assertStringContainsString("✔ Get 500", $stdout);
         self::assertStringContainsString(
             sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", $routeName), $stdout);
-        self::assertStringContainsString("FAILURES!\nTests: 1, Assertions: 1, Failures: 1.", $stdout);
     }
 
     public function testFunctionalGet200(): void
@@ -72,6 +74,15 @@ class FixtureAppTest extends TestCase
 
         self::assertStringContainsString('✔ Get 200', $stdout);
         self::assertStringContainsString('OK (1 test, 3 assertions)', $stdout);
+    }
+
+    public function testGetParameterWithoutDefault(): void
+    {
+        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetParameterWithoutDefault');
+        $stdout = $testProcess->getOutput();
+
+        self::assertStringContainsString('✔ Get parameter without default', $stdout);
+        self::assertStringContainsString('OK (1 test, 1 assertion)', $stdout);
     }
 
     public function testFunctionalGetWithEmptyPayload(): void
@@ -108,7 +119,7 @@ class FixtureAppTest extends TestCase
 
         self::assertStringContainsString('✘ Get with missing json response header', $stdout);
         self::assertStringContainsString('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~^application/(ld\+)?json$~iU".', $stdout);
-        self::assertStringContainsString("FAILURES!\nTests: 1, Assertions: 3, Failures: 1", $stdout);
+        self::assertStringContainsString(sprintf("FAILURES!%sTests: 1, Assertions: 3, Failures: 1", NL), $stdout);
     }
 
     public function testFunctionalGetInvalidJson(): void
@@ -119,6 +130,6 @@ class FixtureAppTest extends TestCase
         self::assertStringContainsString('✘ Get with invalid json', $stdout);
         self::assertStringContainsString('here was a JSON error of code 4', $stdout);
         self::assertStringContainsString('Failed asserting that 4 is identical to 0.', $stdout);
-        self::assertStringContainsString("FAILURES!\nTests: 1, Assertions: 4, Failures: 1", $stdout);
+        self::assertStringContainsString(sprintf("FAILURES!%sTests: 1, Assertions: 4, Failures: 1", NL), $stdout);
     }
 }

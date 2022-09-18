@@ -2,21 +2,24 @@
 
 namespace Pierstoval\SmokeTesting;
 
+use function count;
+use function sprintf;
+use Generator;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
-trait SmokeTestAllRoutes
+trait SmokeTestStaticRoutes
 {
     /**
-     * @return \Generator<string, Route>
+     * @return Generator<string, Route>
      */
-    public function provideRouteCollection(): \Generator
+    public function provideRouteCollection(): Generator
     {
         if (!$this instanceof WebTestCase) {
-            throw new \Exception(\sprintf('The "%s" trait trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
+            throw new RuntimeException(sprintf('The "%s" trait trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
         }
 
         static::bootKernel();
@@ -24,43 +27,60 @@ trait SmokeTestAllRoutes
         /** @var TestContainer $container */
         $container = static::getContainer();
 
-        /** @var RouteCollection $routes */
-        $routes = $container->get(RouterInterface::class)->getRouteCollection();
+        /** @var RouterInterface $router */
+        $router = $container->get(RouterInterface::class);
+
+        $routes = $router->getRouteCollection();
 
         static::ensureKernelShutdown();
 
         if (!$routes->count()) {
-            throw new \RuntimeException('No routes found in the application.');
+            throw new RuntimeException('No routes found in the application.');
         }
 
-        foreach ($routes as $name => $route) {
-            yield $name => [$name, $route];
+        foreach ($routes as $routeName => $route) {
+            $compiledRoute = $route->compile();
+            $variables = $compiledRoute->getVariables();
+            if (count($variables) > 0) {
+                $defaults = $route->getDefaults();
+                $defaultsKeys = array_keys($defaults);
+                $diff = array_diff($variables, $defaultsKeys);
+                if (count($diff) > 0) {
+                    // Dynamic route with no defaults, won't handle it
+                    continue;
+                }
+            }
+
+            $methods = $route->getMethods();
+            if (!$methods) {
+                trigger_error(sprintf("Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", $routeName), E_USER_DEPRECATED);
+
+                $methods[] = 'GET';
+            }
+
+            foreach ($methods as $method) {
+                $routePath = $router->generate($routeName);
+                yield "$method {$routePath}" => [$method, $routeName, $routePath];
+            }
         }
     }
 
     /**
      * @dataProvider provideRouteCollection
+     *
+     * @test
      */
-    public function testRoutesDoNotReturnHttp500(string $routeName, Route $route): void
+    public function testRoutesDoNotReturnInternalError(string $httpMethod, string $routeName, string $routePath): void
     {
-        $methods = $route->getMethods();
-        if (!$methods) {
-            trigger_error(\sprintf("Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", $routeName), E_USER_DEPRECATED);
-
-            $methods[] = 'GET';
-        }
-
         $client = static::createClient();
 
-        foreach ($methods as $method) {
-            $client->request($method, $route->getPath());
+        $client->request($httpMethod, $routePath);
 
-            $response = $client->getResponse();
-            static::assertLessThan(
-                500,
-                $response->getStatusCode(),
-                \sprintf('Route "%s" returned a 500 error with HTTP method "%s".', $routeName, $method),
-            );
-        }
+        $response = $client->getResponse();
+        static::assertLessThan(
+            500,
+            $response->getStatusCode(),
+            sprintf('Request "%s %s" for route "%s" returned an internal error.', $httpMethod, $routePath, $routeName),
+        );
     }
 }
