@@ -50,13 +50,17 @@ trait FunctionalSmokeTester
         $req = $client->getRequest();
         $res = $client->getResponse();
 
-        $responseRouteName = $req->attributes->get('_route');
+        $expectedRouteName = $testData->getExpectedRouteName();
 
-        Assert::assertSame($testData->getExpectedRouteName(), $responseRouteName, sprintf(
-            'The route name "%s" does not match the expected route name "%s".',
-            $testData->getExpectedRouteName(),
-            $responseRouteName
-        ));
+        if ($expectedRouteName !== null) {
+            $responseRouteName = $req->attributes->get('_route');
+
+            Assert::assertSame($testData->getExpectedRouteName(), $responseRouteName, sprintf(
+                'The route name "%s" does not match the expected route name "%s".',
+                $responseRouteName,
+                $expectedRouteName,
+            ));
+        }
 
         if ($expectedStatusCode = $testData->getExpectedStatusCode()) {
             $responseCode = $res->getStatusCode();
