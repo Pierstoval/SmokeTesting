@@ -10,6 +10,14 @@ class FunctionalSmokeTest extends WebTestCase
 {
     use FunctionalSmokeTester;
 
+    public function testGetParameterWithoutDefault(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl("/param/")
+                ->expectStatusCode(404)
+        );
+    }
+
     public function testGet200(): void
     {
         $this->runFunctionalTest(
@@ -17,6 +25,26 @@ class FunctionalSmokeTest extends WebTestCase
                 ->expectRouteName('get_200')
                 ->expectStatusCode(200)
                 ->expectTextToBePresent('200')
+        );
+    }
+
+    public function testGet400(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/400')
+                ->expectRouteName('get_400')
+                ->expectStatusCode(400)
+                ->expectTextToBePresent('400')
+        );
+    }
+
+    public function testGet500(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/500')
+                ->expectRouteName('get_500')
+                ->expectStatusCode(500)
+                ->expectTextToBePresent('500')
         );
     }
 
