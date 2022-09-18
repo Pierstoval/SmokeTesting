@@ -43,5 +43,7 @@ jobs:
                   cd fixture-app && composer install
 
             - name: Test
+              env:
+                  XDEBUG_MODE: coverage
               run: |
-                  vendor/bin/phpunit
+                  vendor/bin/phpunit --coverage-text
