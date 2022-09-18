@@ -5,7 +5,6 @@ namespace Pierstoval\SmokeTesting;
 use PHPUnit\Framework\Assert;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use function count;
 use function is_array;
 use function sprintf;
 use function str_replace;
@@ -137,6 +136,12 @@ trait FunctionalSmokeTester
 
     private function getHttpClientInternal(string $host = null): KernelBrowser
     {
+        static $client;
+
+        if ($client) {
+            return $client;
+        }
+
         $server = [];
 
         if ($host) {

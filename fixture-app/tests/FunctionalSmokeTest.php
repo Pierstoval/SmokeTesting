@@ -13,8 +13,26 @@ class FunctionalSmokeTest extends WebTestCase
     public function testGetParameterWithoutDefault(): void
     {
         $this->runFunctionalTest(
+            FunctionalTestData::withUrl("/param")
+                ->expectStatusCode(404)
+        );
+        $this->runFunctionalTest(
             FunctionalTestData::withUrl("/param/")
                 ->expectStatusCode(404)
+        );
+    }
+
+    public function testGetParameterWithDefault(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl("/other_param")
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('Content: default_value')
+        );
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl("/other_param/other_value")
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('Content: other_value')
         );
     }
 

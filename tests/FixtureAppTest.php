@@ -2,134 +2,101 @@
 
 namespace Pierstoval\SmokeTesting\Tests;
 
-use Generator;
+use App\Tests\FunctionalSmokeTest;
+use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
-use function dirname;
+use PHPUnit\Framework\TestResult;
 use function sprintf;
 
 const NL = DIRECTORY_SEPARATOR === '\\' ? "\r\n" : "\n";
 
+require_once __DIR__.'/../fixture-app/tests/bootstrap.php';
+
 class FixtureAppTest extends TestCase
 {
-    private function runFixtureTest(string $testsCasesFilter): Process
+    private function runFixtureTest(string $testMethod): TestResult
     {
-        $fixtureAppDir = dirname(__DIR__).'/fixture-app';
-        $phpunitPath = $fixtureAppDir.'/vendor/bin/phpunit';
+        $testResult = (new FunctionalSmokeTest($testMethod))->run();
 
-        $phpunitCommand = [
-            PHP_BINARY,
-            $phpunitPath,
-            '--color=never',
-            '--testdox',
-            '--filter='.$testsCasesFilter,
-        ];
+        self::assertSame(1, $testResult->count());
 
-        $testProcess = new Process($phpunitCommand, $fixtureAppDir, timeout: 5);
-
-        $testProcess->start();
-
-        sleep(3);
-
-        $testProcess->stop();
-
-        return $testProcess;
+        return $testResult;
     }
 
     public function testGet200(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet200');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString("✔ Get 200", $stdout);
-        self::assertStringContainsString(
-            sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", 'get_200'), $stdout);
+        $testResult = $this->runFixtureTest('testGet200');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
     public function testGet400(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet400');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString("✔ Get 400", $stdout);
-        self::assertStringContainsString(
-            sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", 'get_400'), $stdout);
+        $testResult = $this->runFixtureTest('testGet400');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
     public function testGet500(): void
     {
-        $routeName = 'get_500';
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet500');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString("✔ Get 500", $stdout);
-        self::assertStringContainsString(
-            sprintf("1x: Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", $routeName), $stdout);
-    }
-
-    public function testFunctionalGet200(): void
-    {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGet200');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString('✔ Get 200', $stdout);
-        self::assertStringContainsString('OK (1 test, 3 assertions)', $stdout);
+        $testResult = $this->runFixtureTest('testGet500');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
     public function testGetParameterWithoutDefault(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetParameterWithoutDefault');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString('✔ Get parameter without default', $stdout);
-        self::assertStringContainsString('OK (1 test, 1 assertion)', $stdout);
+        $testResult = $this->runFixtureTest('testGetParameterWithoutDefault');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
-    public function testFunctionalGetWithEmptyPayload(): void
+    public function testGetParameterWithDefault(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetWithEmptyPayload');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString('✔ Get with empty payload', $stdout);
-        self::assertStringContainsString('OK (1 test, 2 assertions)', $stdout);
+        $testResult = $this->runFixtureTest('testGetParameterWithDefault');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
-    public function testFunctionalGetWithPayload(): void
+    public function testGetWithEmptyPayload(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetWithPayload');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString('✔ Get with payload', $stdout);
-        self::assertStringContainsString('OK (1 test, 3 assertions)', $stdout);
+        $testResult = $this->runFixtureTest('testGetWithEmptyPayload');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
-    public function testFunctionalGetWithValidJson(): void
+    public function testGetWithPayload(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetWithValidJson');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString('✔ Get with valid json', $stdout);
-        self::assertStringContainsString('OK (1 test, 8 assertions)', $stdout);
+        $testResult = $this->runFixtureTest('testGetWithPayload');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
-    public function testFunctionalGetWithMissingJsonHeader(): void
+    public function testGetWithValidJson(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetWithMissingJsonResponseHeader');
-        $stdout = $testProcess->getOutput();
-
-        self::assertStringContainsString('✘ Get with missing json response header', $stdout);
-        self::assertStringContainsString('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~^application/(ld\+)?json$~iU".', $stdout);
-        self::assertStringContainsString(sprintf("FAILURES!%sTests: 1, Assertions: 3, Failures: 1", NL), $stdout);
+        $testResult = $this->runFixtureTest('testGetWithValidJson');
+        self::assertTrue($testResult->wasSuccessful());
     }
 
-    public function testFunctionalGetInvalidJson(): void
+    public function testGetWithMissingJsonResponseHeader(): void
     {
-        $testProcess = $this->runFixtureTest('FunctionalSmokeTest::testGetWithInvalidJson');
-        $stdout = $testProcess->getOutput();
+        $testResult = $this->runFixtureTest('testGetWithMissingJsonResponseHeader');
+        self::assertFalse($testResult->wasSuccessful());
 
-        self::assertStringContainsString('✘ Get with invalid json', $stdout);
-        self::assertStringContainsString('here was a JSON error of code 4', $stdout);
-        self::assertStringContainsString('Failed asserting that 4 is identical to 0.', $stdout);
-        self::assertStringContainsString(sprintf("FAILURES!%sTests: 1, Assertions: 4, Failures: 1", NL), $stdout);
+        self::assertSame(1, $testResult->failureCount());
+
+        $exception = $testResult->failures()[0]->thrownException();
+        self::assertInstanceOf(ExpectationFailedException::class, $exception);
+        self::assertSame('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~^application/(ld\+)?json$~iU".', $exception->getMessage());
+    }
+
+    public function testGetWithInvalidJson(): void
+    {
+        $testResult = $this->runFixtureTest('testGetWithInvalidJson');
+        self::assertFalse($testResult->wasSuccessful());
+
+        self::assertSame(1, $testResult->failureCount());
+
+        $exception = $testResult->failures()[0]->thrownException();
+        self::assertInstanceOf(ExpectationFailedException::class, $exception);
+        self::assertSame(<<<ERR
+            There was a JSON error of code 4
+            Failed asserting that 4 is identical to 0.
+            ERR
+            , $exception->getMessage()
+        );
     }
 }
