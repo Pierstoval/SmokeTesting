@@ -1,6 +1,13 @@
+## v0.4.0
+
+* Breaking change: Make `SmokeTestStaticRoutes` an abstract class to ease customizing it with hooks.
+* Create `SmokeTestStaticRoutes::beforeRequest(...)` to be able to hook before the HTTP request is made to the backend.
+* Create `SmokeTestStaticRoutes::afterRequest(...)` to be able to hook jut after the HTTP request is made, and before the assertion is made.
+* Create `SmokeTestStaticRoutes::afterAssertion(...)` to be able to add more assertions right after an HTTP request is made to the backend.
+
 ## v0.3.0
 
-* Rename `SmokeTestAllRoutes` to `SmokeTestStaticRoutes` (issue #3 by @stof).
+* Breaking change: Rename `SmokeTestAllRoutes` to `SmokeTestStaticRoutes` (issue #3 by @stof).
 * Make `SmokeTestStaticRoutes` trait run a smoke test on all static routes **plus** the routes for which the defaults are enough to generate an url.
 * Use `$router->generateUrl()` instead of `$route->getPath()` to get the URL of the route to test.
 * Add more tests (more coming, aiming maximum coverage of all features).

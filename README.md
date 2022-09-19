@@ -28,14 +28,14 @@ composer require --dev pierstoval/smoke-testing
 
 ## Usage
 
-* Configure PHPUnit for your application (see the [Testing](https://symfony.com/doc/current/testing.html) section on Symfony docs).
-* Create a test case extending Symfony's `WebTestCase` class (the base for functional testing in Symfony).
+First, you need to configure PHPUnit for your application (see the [Testing](https://symfony.com/doc/current/testing.html) section on Symfony docs).
 
 Now choose between [smoke testing all your routes at once](#-smoke-test-all-routes) or [smoke testing routes manually](#-smoke-test-routes-manually) (see below).
 
 ### 🌊 Smoke test ALL routes
 
-* Add the `SmokeTestStaticRoutes` trait to your class.
+* Create a test case.
+* Make it extend `SmokeTestStaticRoutes`.
 * Run PHPUnit.
 
 Example:
@@ -46,11 +46,10 @@ Example:
 namespace App\Tests;
 
 use Pierstoval\SmokeTesting\SmokeTestStaticRoutes;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AllRoutesTest extends WebTestCase
+class AllRoutesTest extends SmokeTestStaticRoutes
 {
-    use SmokeTestStaticRoutes; // This does all the trick!
+    // That's all!
 }
 ```
 
@@ -60,11 +59,11 @@ You need to set this up only once in your project.
 
 What does it do?
 
-The `SmokeTestStaticRoutes` trait already contains a PHPUnit test that will **find all static routes** of your application by using the Symfony Router, and will **run a single HTTP request on each** by using Symfony's HTTP Client.<br>
+The `SmokeTestStaticRoutes` class already contains a PHPUnit test that will **find all static routes** of your application by using the Symfony Router, and will **run a single HTTP request on each** by using Symfony's HTTP Client.<br>
 If the request returns an HTTP status code **>= 500**, the test will **fail**.<br>
 **Otherwise**, even with HTTP 400 or 404, the test will **suceed**.
 
-**Note:** This trait **will also look for your non-static routes**! Routes that have `defaults` for all their dynamic parameters will be included in the smoke test suite, maximizing the number of testable routes when possible.
+**Note:** This class **will also look for your non-static routes**! Routes that have `defaults` for all their dynamic parameters will be included in the smoke test suite, maximizing the number of testable routes when possible.
 
 > What is a static route?<br>
 > To sum it up quickly, `/api/endpoint` is a static route because it does not have any dynamic parameter.<br>
@@ -76,6 +75,19 @@ As said in the intro, 4** HTTP codes can be perfectly normal and expected, like 
 
 > On a personal note, I recommend you create tests for at least 400/401/403 codes on your projects.
 > Most of them are based on client input that has to be validated, or authentication, which are critical entry points of your application, and therefore must be thoroughly tested.
+
+#### Customize `SmokeTestStaticRoutes` usage
+
+To be able to customize your HTTP testing, for example when you have lots of routes and many of them are under authentication, you can use the available extension points in the `SmokeTestStaticRoutes` class:
+
+* `beforeRequest(KernelBrowser $client, string $routeName, string $routePath)`<br>
+  Allows you to hook before the HTTP request is made to the backend. That's the place where you would for instance call your app backend and create an authentication token to add to the HTTP Client object.<br>Since the route name and path are provided, you can even filter based on route name or path (like adding auth only for routes starting with `/api/` if you like).
+* `afterRequest(KernelBrowser $client, string $routeName, string $routePath)`<br>
+  Allows you to hook jut after the HTTP request is made, and before the assertion over non-500-like HTTP code is made.
+* `afterAssertion(KernelBrowser $client, string $routeName, string $routePath)`<br>
+  Allows you to add more assertions right after an HTTP request is made to the backend, in case you want to add more assertions.
+
+If you implement these methods (that are defined as empty by default in the class), you must implement them at least as `protected`, and non-static.
 
 ### 🔬 Smoke test routes **manually**
 

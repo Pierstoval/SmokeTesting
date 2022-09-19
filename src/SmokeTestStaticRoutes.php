@@ -2,6 +2,7 @@
 
 namespace Pierstoval\SmokeTesting;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use function count;
 use function sprintf;
 use Generator;
@@ -11,8 +12,23 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 
-trait SmokeTestStaticRoutes
+abstract class SmokeTestStaticRoutes extends WebTestCase
 {
+    protected function beforeRequest(KernelBrowser $client, string $routeName, string $routePath): void
+    {
+        // To be overriden by the end-user.
+    }
+
+    protected function afterRequest(KernelBrowser $client, string $routeName, string $routePath): void
+    {
+        // To be overriden by the end-user.
+    }
+
+    protected function afterAssertion(KernelBrowser $client, string $routeName, string $routePath): void
+    {
+        // To be overriden by the end-user.
+    }
+
     /**
      * @return Generator<string, Route>
      */
@@ -74,7 +90,11 @@ trait SmokeTestStaticRoutes
     {
         $client = static::createClient();
 
+        $this->beforeRequest($client, $routeName, $routePath);
+
         $client->request($httpMethod, $routePath);
+
+        $this->afterRequest($client, $routeName, $routePath);
 
         $response = $client->getResponse();
         static::assertLessThan(
@@ -82,5 +102,7 @@ trait SmokeTestStaticRoutes
             $response->getStatusCode(),
             sprintf('Request "%s %s" for route "%s" returned an internal error.', $httpMethod, $routePath, $routeName),
         );
+
+        $this->afterAssertion($client, $routeName, $routePath);
     }
 }
