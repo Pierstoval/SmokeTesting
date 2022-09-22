@@ -30,9 +30,18 @@ $testData = ...
     ->expectRedirectUrl('/login');
 ```
 
+## Response Header
+
+You can assert that the provided HTTP Response header matches the expected value.
+
+```
+$testData = ...
+    ->expectResponseHeader('Content-Type', 'text/plain');
+```
+
 ## Content contains string or text
 
-You can assert that the HTTP Response content contains the provided string ortext.
+You can assert that the HTTP Response content contains the provided string or text.
 
 ```
 $testData = ...

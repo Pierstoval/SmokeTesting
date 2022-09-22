@@ -57,3 +57,14 @@ Since we are using Symfony's native KernelBrowser, requests are uppercased & nor
 $testData = FunctionalTestData::withUrl('/')
     ->withHttpHeader('Accept', 'text/plain');
 ```
+
+## Server / Env parameters (experimental)
+
+Will send these as Server parameters to the Symfony Kernel.
+
+```php
+$testData = FunctionalTestData::withUrl('/')
+    ->withServerParameters('APP_ENV', 'test');
+```
+
+Note: this part is experimental, and env vars processing differs depending on how you set them up in your project.
