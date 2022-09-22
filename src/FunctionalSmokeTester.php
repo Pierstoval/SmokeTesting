@@ -92,6 +92,14 @@ trait FunctionalSmokeTester
             ));
         }
 
+        if ($expectedHeaders = $testData->getExpectedHeaders()) {
+            $responseHeaders = $res->headers;
+            foreach ($expectedHeaders as $header => $expectedValue) {
+                Assert::assertTrue($responseHeaders->has($header), sprintf('Response does not have header "%s".', $header));
+                Assert::assertSame($expectedValue, $responseHeaders->get($header));
+            }
+        }
+
         $expectedCssSelector = $testData->getExpectedCssSelector();
 
         $crawlerSubElement = null;

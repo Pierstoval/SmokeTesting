@@ -23,6 +23,8 @@ class FunctionalTestData {
     private bool $expectIsJsonResponse = false;
     /** @var array<callable> */
     private array $expectationCallables = [];
+    /** @var array<string, string> */
+    private array $expectedHeaders = [];
     private ?array $expectJsonParts = null;
 
     private function __construct(string $url)
@@ -39,6 +41,7 @@ class FunctionalTestData {
             || $this->expectText !== null
             || $this->expectIsJsonResponse !== false
             || count($this->expectationCallables) > 0
+            || count($this->expectedHeaders) > 0
             || $this->expectJsonParts !== null
         ;
     }
@@ -91,6 +94,9 @@ class FunctionalTestData {
     public function withServerParameters(string $name, string $value): self
     {
         $new = clone $this;
+        if (isset($new->withServerParameters[$name])) {
+            throw new \RuntimeException(sprintf('Request header "%s" is already defined in test data. Have you added it twice?', $name));
+        }
         $new->withServerParameters[$name] = $value;
 
         return $new;
@@ -147,6 +153,17 @@ class FunctionalTestData {
     {
         $new = clone $this;
         $new->expectationCallables[] = $callable;
+
+        return $new;
+    }
+
+    public function expectResponseHeader(string $headerName, string $headerValue): self
+    {
+        $new = clone $this;
+        if (isset($new->expectedHeaders[$headerName])) {
+            throw new \RuntimeException(sprintf('Expected header "%s" is already defined in test expectations. Have you added it twice?', $headerName));
+        }
+        $new->expectedHeaders[$headerName] = $headerValue;
 
         return $new;
     }
@@ -235,6 +252,11 @@ class FunctionalTestData {
     public function getIsJsonResponseExpectation(): bool
     {
         return $this->expectIsJsonResponse;
+    }
+
+    public function getExpectedHeaders(): array
+    {
+        return $this->expectedHeaders;
     }
 
     public function getExpectedJsonParts(): ?array
