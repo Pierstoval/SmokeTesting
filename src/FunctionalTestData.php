@@ -11,6 +11,7 @@ class FunctionalTestData {
     private ?string $withLocale = null;
     private string $withMethod = 'GET';
     private array $withHttpHeaders = [];
+    private array $withServerParameters = [];
     private ?string $withPayload = null;
 
     // Expectations
@@ -83,6 +84,14 @@ class FunctionalTestData {
     {
         $new = clone $this;
         $new->withHttpHeaders[$name] = $value;
+
+        return $new;
+    }
+
+    public function withServerParameters(string $name, string $value): self
+    {
+        $new = clone $this;
+        $new->withServerParameters[$name] = $value;
 
         return $new;
     }
@@ -181,6 +190,11 @@ class FunctionalTestData {
     public function getRequestHeaders(): array
     {
         return $this->withHttpHeaders;
+    }
+
+    public function getServerParameters(): array
+    {
+        return $this->withServerParameters;
     }
 
     public function getRequestPayload(): ?string

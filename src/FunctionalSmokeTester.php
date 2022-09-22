@@ -39,6 +39,13 @@ trait FunctionalSmokeTester
             $serverParameters[$this->normalizeHttpHeader($header)] = $value;
         }
 
+        foreach ($testData->getServerParameters() as $param => $value) {
+            if (isset($serverParameters[$param])) {
+                throw new \RuntimeException(sprintf('Parameter "%s" is already defined in server parameters. Have you added it twice as an HTTP header?', $param));
+            }
+            $serverParameters[$param] = $value;
+        }
+
         $crawler = $client->request(
             method: $testData->getHttpMethod(),
             uri: $testData->getUrl(),
