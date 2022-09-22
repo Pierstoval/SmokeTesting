@@ -96,14 +96,6 @@ trait FunctionalSmokeTester
             ));
         }
 
-        $callbacks = $testData->getExpectationCallables();
-        if ($callbacks) {
-            foreach ($callbacks as $callback) {
-                $callback = $callback(...)->bindTo($this, static::class);
-                $callback($client, $crawler);
-            }
-        }
-
         if ($testData->getIsJsonResponseExpectation()) {
             $header = $res->headers->get('Content-Type');
             Assert::assertMatchesRegularExpression('~^application/(ld\+)?json$~iU', $header);
@@ -126,7 +118,7 @@ trait FunctionalSmokeTester
             Assert::assertStringContainsString($expectedText, $textToMatch);
         }
 
-        if ($callbacks) {
+        if ($callbacks = $testData->getExpectationCallables()) {
             foreach ($callbacks as $callback) {
                 $callback = $callback(...)->bindTo($this, static::class);
                 $callback($client, $crawler);
