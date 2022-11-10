@@ -4,7 +4,9 @@ namespace App\Tests;
 
 use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Pierstoval\SmokeTesting\FunctionalTestData;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\BrowserKit\Cookie;
 
 class FunctionalSmokeTest extends WebTestCase
 {
@@ -120,6 +122,19 @@ class FunctionalSmokeTest extends WebTestCase
                 ->expectStatusCode(200)
                 ->expectTextToBePresent('{"message":')
                 ->expectIsJsonResponse()
+        );
+    }
+
+    public function testGetWithPreRequestCallback(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/cookie/value')
+                ->withCallbackBeforeRequest(function (KernelBrowser $browser): void {
+                    $browser->getCookieJar()->set(new Cookie('test_cookie', 'test value'));
+                })
+                ->expectRouteName('cookie_value')
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('Value: "test value"')
         );
     }
 }

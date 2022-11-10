@@ -80,4 +80,10 @@ class TestRoutesController extends AbstractController
             'Content-Type' => 'application/json',
         ]);
     }
+
+    #[Route("/cookie/value", name: "cookie_value")]
+    public function getCookieValue(Request $request): Response
+    {
+        return new Response(\sprintf('Value: "%s"', $request->cookies->get('test_cookie')));
+    }
 }

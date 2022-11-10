@@ -68,3 +68,16 @@ $testData = FunctionalTestData::withUrl('/')
 ```
 
 Note: this part is experimental, and env vars processing differs depending on how you set them up in your project.
+
+## Execute an action before making the actual HTTP request
+
+Will execute a callback with the `KernelBrowser` instance as first argument just before making the HTTP request.
+
+Very useful to perform logins, setting cookies, or populate a database with test data. 
+
+```php
+$testData = FunctionalTestData::withUrl('/')
+    ->withCallbackBeforeRequest(function (KernelBrowser $browser): void {
+        $browser->getCookieJar()->set(new Cookie('test_cookie', 'test value'));
+    });
+```

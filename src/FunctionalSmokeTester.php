@@ -46,6 +46,10 @@ trait FunctionalSmokeTester
             $serverParameters[$param] = $value;
         }
 
+        if ($callback = $testData->getCallbackBeforeRequest()) {
+            \Closure::bind($callback, $this, static::class)($client);
+        }
+
         $crawler = $client->request(
             method: $testData->getHttpMethod(),
             uri: $testData->getUrl(),

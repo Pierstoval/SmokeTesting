@@ -1,3 +1,7 @@
+## v0.4.2
+
+* Add ability to execute an action before making the actual HTTP request via `FunctionalTestData->withCallbackBeforeRequest()` method.
+
 ## v0.4.1
 
 * Fix a bug calling "expectation callables" twice

@@ -68,6 +68,12 @@ class FixtureAppTest extends TestCase
         self::assertTrue($testResult->wasSuccessful());
     }
 
+    public function testGetWithPreRequestCallback(): void
+    {
+        $testResult = $this->runFixtureTest('testGetWithPreRequestCallback');
+        self::assertTrue($testResult->wasSuccessful());
+    }
+
     public function testGetWithMissingJsonResponseHeader(): void
     {
         $testResult = $this->runFixtureTest('testGetWithMissingJsonResponseHeader');

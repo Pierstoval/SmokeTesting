@@ -4,7 +4,7 @@ namespace Pierstoval\SmokeTesting;
 
 use function count;
 
-class FunctionalTestData {
+final class FunctionalTestData {
     // Request information
     private readonly string $url;
     private ?string $withHost = null;
@@ -13,6 +13,8 @@ class FunctionalTestData {
     private array $withHttpHeaders = [];
     private array $withServerParameters = [];
     private ?string $withPayload = null;
+    /** @var null|\Closure */
+    private ?\Closure $callbackBeforeRequest = null;
 
     // Expectations
     private ?string $expectRouteName = null;
@@ -55,6 +57,14 @@ class FunctionalTestData {
     {
         $new = clone $this;
         $new->withHost = $host;
+
+        return $new;
+    }
+
+    public function withCallbackBeforeRequest(callable $callable): self
+    {
+        $new = clone $this;
+        $new->callbackBeforeRequest = $callable(...);
 
         return $new;
     }
@@ -217,6 +227,11 @@ class FunctionalTestData {
     public function getRequestPayload(): ?string
     {
         return $this->withPayload;
+    }
+
+    public function getCallbackBeforeRequest(): ?\Closure
+    {
+        return $this->callbackBeforeRequest;
     }
 
     public function getExpectedRouteName(): ?string
