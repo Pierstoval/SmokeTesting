@@ -36,7 +36,15 @@ trait FunctionalSmokeTester
         }
 
         foreach ($testData->getRequestHeaders() as $header => $value) {
-            $serverParameters[$this->normalizeHttpHeader($header)] = $value;
+            $normalizedHeader = $this->normalizeHttpHeader($header);
+            $serverParameters[$normalizedHeader] = $value;
+            if ($normalizedHeader === 'HTTP_CONTENT_TYPE') {
+                // PHP handles the Content-Type header with the CGI protocol,
+                // so we need to de-normalize it to just "CONTENT_TYPE" instead of how PHP would
+                // normally do it.
+                // @see https://bugs.php.net/bug.php?id=66606&thanks=6
+                $serverParameters['CONTENT_TYPE'] = $value;
+            }
         }
 
         foreach ($testData->getServerParameters() as $param => $value) {

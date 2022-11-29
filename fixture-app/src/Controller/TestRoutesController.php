@@ -95,4 +95,15 @@ class TestRoutesController extends AbstractController
     {
         return new Response(\sprintf('Value: "%s"', $request->cookies->get('test_cookie')));
     }
+
+    #[Route("/content-type", name: "content_type")]
+    public function getContentType(Request $request): Response
+    {
+        return new JsonResponse([
+            'header' => $request->headers->get('Content-Type'),
+            'server_normalized' => $request->server->get('HTTP_CONTENT_TYPE'),
+            'server_denormalized' => $request->server->get('CONTENT_TYPE'),
+            'format' => $request->getContentType(),
+        ]);
+    }
 }

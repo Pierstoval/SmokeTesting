@@ -150,4 +150,20 @@ class FunctionalSmokeTest extends WebTestCase
                 ->expectTextToBePresent('Value: "test value"')
         );
     }
+
+    public function testGetWithContentType(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/content-type')
+                ->withHttpHeader('Content-Type', 'application/ld+json; charset=utf-8')
+                ->expectRouteName('content_type')
+                ->expectStatusCode(200)
+                ->expectJsonParts([
+                    'header' => 'application/ld+json; charset=utf-8',
+                    'server_normalized' => 'application/ld+json; charset=utf-8',
+                    'server_denormalized' => 'application/ld+json; charset=utf-8',
+                    'format' => 'jsonld',
+                ])
+        );
+    }
 }

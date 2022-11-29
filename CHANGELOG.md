@@ -1,3 +1,7 @@
+## v0.4.4
+
+*  Fix "Content-Type" header #4
+
 ## v0.4.3
 
 * Fix JSON header compatibility with charset parameter.
