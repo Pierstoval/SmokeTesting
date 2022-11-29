@@ -103,6 +103,19 @@ class FunctionalSmokeTest extends WebTestCase
         );
     }
 
+    public function testGetWithValidJsonHeader(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/json/valid-header')
+                ->expectRouteName('json_valid_header')
+                ->expectStatusCode(200)
+                ->expectJsonParts([
+                    'message' => 'Ok!',
+                    'code' => 200,
+                ])
+        );
+    }
+
     public function testGetWithMissingJsonResponseHeader(): void
     {
         $this->runFunctionalTest(

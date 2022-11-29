@@ -64,6 +64,15 @@ class TestRoutesController extends AbstractController
         ]);
     }
 
+    #[Route("/json/valid-header", name: "json_valid_header")]
+    public function getValidJsonHeader(): Response
+    {
+        return new JsonResponse([
+            'message' => 'Ok!',
+            'code' => 200,
+        ], 200, ['Content-Type' => 'application/json; charset=utf-8']);
+    }
+
     #[Route("/json/missing_header", name: "json_missing_header")]
     public function getJsonInvalidHeader(): Response
     {

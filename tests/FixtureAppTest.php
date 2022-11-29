@@ -68,6 +68,12 @@ class FixtureAppTest extends TestCase
         self::assertTrue($testResult->wasSuccessful());
     }
 
+    public function testGetWithValidJsonHeader(): void
+    {
+        $testResult = $this->runFixtureTest('testGetWithValidJsonHeader');
+        self::assertTrue($testResult->wasSuccessful());
+    }
+
     public function testGetWithPreRequestCallback(): void
     {
         $testResult = $this->runFixtureTest('testGetWithPreRequestCallback');
@@ -83,7 +89,7 @@ class FixtureAppTest extends TestCase
 
         $exception = $testResult->failures()[0]->thrownException();
         self::assertInstanceOf(ExpectationFailedException::class, $exception);
-        self::assertSame('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~^application/(ld\+)?json$~iU".', $exception->getMessage());
+        self::assertSame('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~application/(ld\+)?json~iU".', $exception->getMessage());
     }
 
     public function testGetWithInvalidJson(): void
