@@ -1,6 +1,10 @@
+## v0.5.0
+
+* Make the project compatible from PHP 8.0 up to 8.2, and from Symfony 5.4 up to 6.2
+
 ## v0.4.4
 
-*  Fix "Content-Type" header #4
+* Fix "Content-Type" header #4
 
 ## v0.4.3
 

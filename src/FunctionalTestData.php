@@ -6,7 +6,7 @@ use function count;
 
 final class FunctionalTestData {
     // Request information
-    private readonly string $url;
+    private string $url;
     private ?string $withHost = null;
     private ?string $withLocale = null;
     private string $withMethod = 'GET';
@@ -64,7 +64,7 @@ final class FunctionalTestData {
     public function withCallbackBeforeRequest(callable $callable): self
     {
         $new = clone $this;
-        $new->callbackBeforeRequest = $callable(...);
+        $new->callbackBeforeRequest = \Closure::fromCallable($callable);
 
         return $new;
     }

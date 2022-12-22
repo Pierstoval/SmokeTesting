@@ -8,11 +8,16 @@ jobs:
 
         strategy:
             matrix:
-                php-version:
-                    - '8.1'
-
-                symfony-version:
-                    - '6.1'
+                include:
+                    - { php-version: "8.0", symfony-version: "5.4" }
+                    - { php-version: "8.1", symfony-version: "5.4" }
+                    - { php-version: "8.1", symfony-version: "6.0" }
+                    - { php-version: "8.1", symfony-version: "6.1" }
+                    - { php-version: "8.1", symfony-version: "6.2" }
+                    - { php-version: "8.2", symfony-version: "5.4" }
+                    - { php-version: "8.2", symfony-version: "6.0" }
+                    - { php-version: "8.2", symfony-version: "6.1" }
+                    - { php-version: "8.2", symfony-version: "6.2" }
 
         name: PHP ${{ matrix.php-version }} and Symfony ${{ matrix.symfony-version }}
         steps:
@@ -36,11 +41,13 @@ jobs:
 
             - name: Install dependencies
               run: |
-                  composer install
+                  composer update --with "symfony/framework-bundle:^${{ matrix.symfony-version }}"
 
             - name: Setup fixture app
+              working-directory: ./fixture-app
               run: |
-                  cd fixture-app && composer install
+                  sed -i 's/"require": "6.1.*"/"require": "${{ matrix.symfony-version }}.*"/g' composer.json
+                  composer install
 
             - name: Test
               env:
