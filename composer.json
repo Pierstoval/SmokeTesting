@@ -24,6 +24,7 @@
         "symfony/framework-bundle": "^5.4|^6.1"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "symfony/maker-bundle": "^1.48"
     }
 }
