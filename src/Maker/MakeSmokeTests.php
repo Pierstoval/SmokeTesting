@@ -16,8 +16,11 @@ use Symfony\Component\Routing\RouterInterface;
 
 class MakeSmokeTests extends AbstractMaker
 {
-    public function __construct(private RouterInterface $router)
+    private RouterInterface $router;
+
+    public function __construct(RouterInterface $router)
     {
+        $this->router = $router;
     }
 
     public static function getCommandName(): string
