@@ -1,3 +1,10 @@
+## v0.6.0
+
+* Create a Maker command to generate all routes tests in one single class
+* Make it usable with PHP 7.4
+* Add Bundle class and update package type to symfony-bundle to automate the bundle setup with Flex
+* Document new features in the readme
+
 ## v0.5.0
 
 * Make the project compatible from PHP 8.0 up to 8.2, and from Symfony 5.4 up to 6.2

@@ -30,7 +30,11 @@ composer require --dev pierstoval/smoke-testing
 
 First, you need to configure PHPUnit for your application (see the [Testing](https://symfony.com/doc/current/testing.html) section on Symfony docs).
 
-Now choose between [smoke testing all your routes at once](#-smoke-test-all-routes) or [smoke testing routes manually](#-smoke-test-routes-manually) (see below).
+Now you have three choices to test your project:
+
+* [Smoke testing all your routes at once](#-smoke-test-all-routes)
+* [Smoke testing routes manually](#-smoke-test-routes-manually)
+* [Smoke testing all your routes but with possible granular customization](#-smoke-test-all-routes-with-possible-granular-customization)
 
 ### 🌊 Smoke test ALL routes
 
@@ -171,3 +175,97 @@ The whole API of the `FunctionalTestData` class is explained there:
 
 * [List of available Request data/input](./docs/RequestData.md)
 * [List of available expectations](./docs/Expectations.md)
+
+### 🔎 Smoke test all routes with possible granular customization
+
+#### Requirements
+
+> ℹ Note: This feature requires the `symfony/maker-bundle`.
+
+If you use `symfony/flex`, the `SmokeTestingBundle` will be installed automatically.
+
+If not, you can add it to your `config/bundles.php` file:
+
+```php
+<?php
+// config/bundles.php
+return [
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+    Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true, 'test' => true],
+    // ...
+    
+    // Add this line ⬇
+    Pierstoval\SmokeTesting\SmokeTestingBundle::class => ['dev' => true, 'test' => true],
+];
+```
+
+#### Usage
+
+Run the `bin/console make:smoke-tests` command.
+
+This will create a `tests/FunctionalTest.php` file containing **all** your generated tests.
+
+The generated tests will have **exactly the same behavior** as the ones used in the `SmokeTestStaticRoutes` class, but instead of being automatically generated and used, they will be written in your Test file.
+
+They will use the `FunctionalTestData` class and the `$this->runFunctionalTest()` method, just like the [above method](#-smoke-test-routes-manually).
+
+If you want to generate tests once and for all and not use the `FunctionalTestData`, you can append the `--no-dto` option to the `make:smoke-tests` command: it will create regular tests using Symfony's classic request system:
+
+Example:
+
+* With this libary's <abbr title="Data Transfer Object">DTO</abbr> object:
+  ```php
+  <?php
+  namespace App\Tests;
+  use Pierstoval\SmokeTesting\FunctionalSmokeTester;
+  use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+  class FunctionalTest extends WebTestCase
+  {
+      use FunctionalSmokeTester;
+    
+      public function testRouteGet200WithMethodGet(): void
+      {
+          $this->runFunctionalTest(
+              FunctionalTestData::withUrl('/200')
+                  ->withMethod('GET')
+                  ->expectRouteName('get_200')
+                  ->appendCallableExpectation($this->assertStatusCodeLessThan500('GET', '/200'))
+          );
+      }
+  
+      // ...
+  }
+  ```
+* With Symfony's native functional test:
+  ```php
+  <?php
+  namespace App\Tests;
+  use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+  class FunctionalTest extends WebTestCase
+  {
+      public function testRouteGet200WithMethodGet(): void
+      {
+          $client = static::createClient();
+          $crawler = $client->request('GET', '/');
+  
+          static::assertLessThan(
+              500,
+              $client->getResponse()->getStatusCode(),
+              'Request "GET /200" for route "get_200" returned an internal error.',
+          );
+      }
+    
+      // ...
+  }
+  ```
+
+This method has pros and cons:
+
+* Pros:
+  * You can generate **all** your tests at once with `--no-dto` and remove library if you want
+  * Works with **any** Symfony-based test suite, as long as you have HTTP routes.
+  * You still test all your routes
+  * If some features of your projects are critical, you can focus on a specific HTTP route and copy/paste the initial code and create more tests for this specific feature: the code is already there to help you! And it still tests other routes.
+* Cons:
+  * This can create a big file if you have a lot of routes
+  * New routes won't be automatically added, you have to do it yourself
