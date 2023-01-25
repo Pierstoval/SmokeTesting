@@ -3,8 +3,8 @@ echo "<?php\n"; ?>
 
 namespace <?php echo $namespace; ?>;
 
-use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 <?php if ($with_dto): ?>
+use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Pierstoval\SmokeTesting\FunctionalTestData;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 <?php endif; ?>
@@ -12,7 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class <?php echo $class_name; ?> extends WebTestCase
 {
+<?php if ($with_dto): ?>
     use FunctionalSmokeTester;
+<?php endif; ?>
 <?php foreach ($routes as $route): ?>
 
     public function testRoute<?php echo ucfirst(preg_replace_callback('~_([a-z0-9])~isUu', function($matches) {return strtoupper($matches[1]);}, $route['name'])).'WithMethod'.ucfirst(strtolower($route['method'])); ?>(): void

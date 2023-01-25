@@ -2,12 +2,10 @@
 
 namespace App\Tests;
 
-use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class FunctionalTest extends WebTestCase
 {
-    use FunctionalSmokeTester;
 
     public function testRouteGetParamWithDefaultWithMethodGet(): void
     {
