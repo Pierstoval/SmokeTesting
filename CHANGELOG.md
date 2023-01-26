@@ -1,3 +1,7 @@
+## v0.6.1
+
+* Use `.gitattributes` to remove useless files from Composer package (@ker0x #6)
+
 ## v0.6.0
 
 * Create a Maker command to generate all routes tests in one single class
