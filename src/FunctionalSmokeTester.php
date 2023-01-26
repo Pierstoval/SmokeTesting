@@ -16,7 +16,7 @@ trait FunctionalSmokeTester
     public function runFunctionalTest(FunctionalTestData $testData): void {
         if (!$this instanceof WebTestCase) {
             throw new \Exception(
-                sprintf('The "%s" trait trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
+                sprintf('The "%s" trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
         }
 
         if (!$testData->hasExpectations()) {
