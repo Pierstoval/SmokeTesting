@@ -40,7 +40,7 @@ class MakeSmokeTestsTest extends KernelTestCase
         $this->assertStringContainsString('Next: Open your new test class and start customizing it.', $display);
     }
 
-    public function provideSmokeTestCases(): \Generator
+    public static function provideSmokeTestCases(): \Generator
     {
         yield 'Generate smoke tests with DTO' => [
             'dto' => true,

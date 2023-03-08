@@ -32,9 +32,9 @@ abstract class SmokeTestStaticRoutes extends WebTestCase
     /**
      * @return Generator<string, Route>
      */
-    public function provideRouteCollection(): Generator
+    public static function provideRouteCollection(): Generator
     {
-        if (!$this instanceof WebTestCase) {
+        if (!is_a(self::class, WebTestCase::class, true)) {
             throw new RuntimeException(sprintf('The "%s" trait trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
         }
 

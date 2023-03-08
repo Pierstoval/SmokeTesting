@@ -5,107 +5,91 @@ namespace Pierstoval\SmokeTesting\Tests;
 use App\Tests\FunctionalSmokeTest;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestResult;
 
 require_once __DIR__.'/../fixture-app/tests/bootstrap.php';
 
 class FixtureAppTest extends TestCase
 {
-    private function runFixtureTest(string $testMethod): TestResult
+    private function runFixtureTest(string $testMethod): ?\Throwable
     {
-        $testResult = (new FunctionalSmokeTest($testMethod))->run();
+        $error = null;
+        try {
+            $test = new FunctionalSmokeTest($testMethod);
+            $test->{$testMethod}();
+        } catch (\Throwable $e) {
+            $error = $e;
+        }
 
-        self::assertSame(1, $testResult->count());
-
-        return $testResult;
+        return $error;
     }
 
     public function testGet200(): void
     {
-        $testResult = $this->runFixtureTest('testGet200');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGet200'));
     }
 
     public function testGet400(): void
     {
-        $testResult = $this->runFixtureTest('testGet400');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGet400'));
     }
 
     public function testGet500(): void
     {
-        $testResult = $this->runFixtureTest('testGet500');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGet500'));
     }
 
     public function testGetParameterWithoutDefault(): void
     {
-        $testResult = $this->runFixtureTest('testGetParameterWithoutDefault');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetParameterWithoutDefault'));
     }
 
     public function testGetParameterWithDefault(): void
     {
-        $testResult = $this->runFixtureTest('testGetParameterWithDefault');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetParameterWithDefault'));
     }
 
     public function testGetWithEmptyPayload(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithEmptyPayload');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetWithEmptyPayload'));
     }
 
     public function testGetWithPayload(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithPayload');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetWithPayload'));
     }
 
     public function testGetWithValidJson(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithValidJson');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetWithValidJson'));
     }
 
     public function testGetWithValidJsonHeader(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithValidJsonHeader');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetWithValidJsonHeader'));
     }
 
     public function testGetWithPreRequestCallback(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithPreRequestCallback');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetWithPreRequestCallback'));
     }
 
     public function testGetWithContentType(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithContentType');
-        self::assertTrue($testResult->wasSuccessful());
+        self::assertNull($this->runFixtureTest('testGetWithContentType'));
     }
 
     public function testGetWithMissingJsonResponseHeader(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithMissingJsonResponseHeader');
-        self::assertFalse($testResult->wasSuccessful());
+        self::assertNotNull($exception = $this->runFixtureTest('testGetWithMissingJsonResponseHeader'));
 
-        self::assertSame(1, $testResult->failureCount());
-
-        $exception = $testResult->failures()[0]->thrownException();
         self::assertInstanceOf(ExpectationFailedException::class, $exception);
         self::assertSame('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~application/(ld\+)?json~iU".', $exception->getMessage());
     }
 
     public function testGetWithInvalidJson(): void
     {
-        $testResult = $this->runFixtureTest('testGetWithInvalidJson');
-        self::assertFalse($testResult->wasSuccessful());
+        self::assertNotNull($exception = $this->runFixtureTest('testGetWithInvalidJson'));
 
-        self::assertSame(1, $testResult->failureCount());
-
-        $exception = $testResult->failures()[0]->thrownException();
         self::assertInstanceOf(ExpectationFailedException::class, $exception);
         self::assertSame(<<<ERR
             There was a JSON error of code 4

@@ -9,18 +9,31 @@ jobs:
         strategy:
             matrix:
                 include:
-                    - { php-version: "7.4", symfony-version: "5.4" }
-                    - { php-version: "8.0", symfony-version: "5.4" }
-                    - { php-version: "8.1", symfony-version: "5.4" }
-                    - { php-version: "8.1", symfony-version: "6.0" }
-                    - { php-version: "8.1", symfony-version: "6.1" }
-                    - { php-version: "8.1", symfony-version: "6.2" }
-                    - { php-version: "8.2", symfony-version: "5.4" }
-                    - { php-version: "8.2", symfony-version: "6.0" }
-                    - { php-version: "8.2", symfony-version: "6.1" }
-                    - { php-version: "8.2", symfony-version: "6.2" }
+                    - { php-version: "7.4", symfony-version: "5.4", phpunit-version: "9.5" }
 
-        name: PHP ${{ matrix.php-version }} and Symfony ${{ matrix.symfony-version }}
+                    - { php-version: "8.0", symfony-version: "5.4", phpunit-version: "9.5" }
+
+                    - { php-version: "8.1", symfony-version: "5.4", phpunit-version: "9.5" }
+                    - { php-version: "8.1", symfony-version: "6.0", phpunit-version: "9.5" }
+                    - { php-version: "8.1", symfony-version: "6.1", phpunit-version: "9.5" }
+                    - { php-version: "8.1", symfony-version: "6.2", phpunit-version: "9.5" }
+
+                    - { php-version: "8.2", symfony-version: "5.4", phpunit-version: "9.5" }
+                    - { php-version: "8.2", symfony-version: "6.0", phpunit-version: "9.5" }
+                    - { php-version: "8.2", symfony-version: "6.1", phpunit-version: "9.5" }
+                    - { php-version: "8.2", symfony-version: "6.2", phpunit-version: "9.5" }
+
+                    - { php-version: "8.1", symfony-version: "5.4", phpunit-version: "10" }
+                    - { php-version: "8.1", symfony-version: "6.0", phpunit-version: "10" }
+                    - { php-version: "8.1", symfony-version: "6.1", phpunit-version: "10" }
+                    - { php-version: "8.1", symfony-version: "6.2", phpunit-version: "10" }
+
+                    - { php-version: "8.2", symfony-version: "5.4", phpunit-version: "10" }
+                    - { php-version: "8.2", symfony-version: "6.0", phpunit-version: "10" }
+                    - { php-version: "8.2", symfony-version: "6.1", phpunit-version: "10" }
+                    - { php-version: "8.2", symfony-version: "6.2", phpunit-version: "10" }
+
+        name: PHP ${{ matrix.php-version }}, Symfony ${{ matrix.symfony-version }}, PHPUnit ${{ matrix.phpunit-version }}
         steps:
             - uses: actions/checkout@v2
 
@@ -42,16 +55,16 @@ jobs:
 
             - name: Install dependencies
               run: |
-                  composer update --with "symfony/framework-bundle:^${{ matrix.symfony-version }}"
+                  composer update --with "symfony/framework-bundle:^${{ matrix.symfony-version }}" --with "phpunit/phpunit:^${{ matrix.phpunit-version }}"
 
             - name: Setup fixture app
               working-directory: ./fixture-app
               run: |
                   sed -i 's/"require": "6.1.*"/"require": "${{ matrix.symfony-version }}.*"/g' composer.json
-                  composer install
+                  composer update --with "phpunit/phpunit:^${{ matrix.phpunit-version }}"
 
             - name: Test
               env:
                   XDEBUG_MODE: coverage
               run: |
-                  vendor/bin/phpunit --coverage-text
+                  vendor/bin/phpunit --coverage-text --configuration phpunit-${{ matrix.phpunit-version }}.xml
