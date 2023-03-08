@@ -1,3 +1,7 @@
+## v0.6.2
+
+* Make the lib compatible with PHPUnit 10 with no regression in the codebase.
+
 ## v0.6.1
 
 * Use `.gitattributes` to remove useless files from Composer package (@ker0x #6)
