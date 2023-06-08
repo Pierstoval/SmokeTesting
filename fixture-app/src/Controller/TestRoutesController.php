@@ -99,11 +99,15 @@ class TestRoutesController extends AbstractController
     /** @Route("/content-type", name="content_type") */
     public function getContentType(Request $request): Response
     {
+        $contentType = method_exists($request, 'getContentTypeFormat')
+            ? $request->getContentTypeFormat()
+            : $request->getContentType();
+
         return new JsonResponse([
             'header' => $request->headers->get('Content-Type'),
             'server_normalized' => $request->server->get('HTTP_CONTENT_TYPE'),
             'server_denormalized' => $request->server->get('CONTENT_TYPE'),
-            'format' => $request->getContentType(),
+            'format' => $contentType,
         ]);
     }
 }
