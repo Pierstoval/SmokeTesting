@@ -1,3 +1,8 @@
+## v0.6.3
+
+* Remove a Symfony 6.3 type-based deprecation
+* Updated phpunit 10 config
+
 ## v0.6.2
 
 * Make the lib compatible with PHPUnit 10 with no regression in the codebase.
