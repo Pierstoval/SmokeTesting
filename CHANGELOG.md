@@ -1,3 +1,12 @@
+## v1.0.0
+
+* Project seems quite stable, let's roll for v1.0.0
+* **BC breaks**: drop some version compatibilities for maintenance reasons:
+  * Dropped support for PHP < 8.0
+  * Dropped support for Symfony < 6.1
+* Made the project compatible with Symfony 7.0 and PHP 8.2
+* Refactored CI and fixture app to reflect these new requirements 
+
 ## v0.6.3
 
 * Remove a Symfony 6.3 type-based deprecation
