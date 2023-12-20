@@ -12,42 +12,49 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TestRoutesController extends AbstractController
 {
     /** @Route("/param/{id}", name="get_param_without_default") */
+    #[Route("/param/{id}", name: "get_param_without_default")]
     public function getParameterWithoutDefault(string $id): Response
     {
         return new Response("Content: $id");
     }
 
     /** @Route("/other_param/{id}", name="get_param_with_default", defaults={"id": "default_value"}) */
+    #[Route("/other_param/{id}", name: "get_param_with_default", defaults: ["id" => "default_value"])]
     public function getParameterWithDefault(string $id): Response
     {
         return new Response("Content: $id");
     }
 
     /** @Route("/200", name="get_200") */
+    #[Route("/200", name: "get_200")]
     public function getOk(): Response
     {
         return new Response('200');
     }
 
     /** @Route("/302", name="get_302") */
+    #[Route("/302", name: "get_302")]
     public function getRedirect(): RedirectResponse
     {
         return new RedirectResponse('/200');
     }
 
     /** @Route("/400", name="get_400") */
+    #[Route("/400", name: "get_400")]
     public function get400(): Response
     {
         return new Response('400', 400);
     }
 
     /** @Route("/500", name="get_500") */
+    #[Route("/500", name: "get_500")]
     public function get500(): Response
     {
         return new Response('500', 500);
     }
 
     /** @Route("/payload", name="get_with_payload") */
+    #[Route("/payload", name: "get_with_payload")]
     public function getWithPayload(Request $request): Response
     {
         $payload = $request->getContent();
@@ -56,6 +63,7 @@ class TestRoutesController extends AbstractController
     }
 
     /** @Route("/json/valid", name="json_valid") */
+    #[Route("/json/valid", name: "json_valid")]
     public function getValidJson(): Response
     {
         return new JsonResponse([
@@ -65,6 +73,7 @@ class TestRoutesController extends AbstractController
     }
 
     /** @Route("/json/valid-header", name="json_valid_header") */
+    #[Route("/json/valid-header", name: "json_valid_header")]
     public function getValidJsonHeader(): Response
     {
         return new JsonResponse([
@@ -74,6 +83,7 @@ class TestRoutesController extends AbstractController
     }
 
     /** @Route("/json/missing_header", name="json_missing_header") */
+    #[Route("/json/missing_header", name: "json_missing_header")]
     public function getJsonInvalidHeader(): Response
     {
         return new Response(json_encode([
@@ -83,6 +93,7 @@ class TestRoutesController extends AbstractController
     }
 
     /** @Route("/json/invalid", name="json_invalid") */
+    #[Route("/json/invalid", name: "json_invalid")]
     public function getJsonInvalid(): Response
     {
         return new Response('{"message":', 200, [
@@ -91,12 +102,14 @@ class TestRoutesController extends AbstractController
     }
 
     /** @Route("/cookie/value", name="cookie_value") */
+    #[Route("/cookie/value", name: "cookie_value")]
     public function getCookieValue(Request $request): Response
     {
         return new Response(\sprintf('Value: "%s"', $request->cookies->get('test_cookie')));
     }
 
     /** @Route("/content-type", name="content_type") */
+    #[Route("/content-type", name: "content_type")]
     public function getContentType(Request $request): Response
     {
         $contentType = method_exists($request, 'getContentTypeFormat')
