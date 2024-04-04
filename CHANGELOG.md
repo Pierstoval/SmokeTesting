@@ -1,3 +1,7 @@
+## v1.0.1
+
+* Add the `SMOKE_TESTING_ROUTES_METHODS` environment variable to disable the deprecation message
+
 ## v1.0.0
 
 * Project seems quite stable, let's roll for v1.0.0
