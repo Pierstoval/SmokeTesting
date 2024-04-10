@@ -23,7 +23,16 @@ final class RoutesExtractor
 
             $methods = $route->getMethods();
             if (!$methods) {
-                trigger_error(sprintf("Route %s has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.", $routeName), E_USER_DEPRECATED);
+                $errorMode = $_SERVER['SMOKE_TESTING_ROUTES_METHODS'] ?? $_ENV['SMOKE_TESTING_ROUTES_METHODS'] ?? getenv('SMOKE_TESTING_ROUTES_METHODS') ?: 'true';
+
+                if (!empty($errorMode) && 'false' !== $errorMode && 'no' !== $errorMode && '0' !== $errorMode && 'disabled' !== $errorMode) {
+                    $errorType = E_USER_DEPRECATED;
+                    if (str_starts_with($errorMode, 'E_USER_')) {
+                        $errorType = constant($errorMode);
+                    }
+                    $message = sprintf('Route "%s" has no configured HTTP methods. It is recommended that you set at least one HTTP method for your route in its configuration.', $routeName);
+                    trigger_error($message, $errorType);
+                }
 
                 $methods[] = 'GET';
             }

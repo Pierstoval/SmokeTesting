@@ -93,6 +93,23 @@ To be able to customize your HTTP testing, for example when you have lots of rou
 
 If you implement these methods (that are defined as empty by default in the class), you must implement them at least as `protected`, and non-static.
 
+#### Recommendations
+
+As of Symfony best practices, all routes should be configured with HTTP methods (GET, POST, etc.).
+
+If your routes are not configured this way, the `RoutesExtractor` (used by the `SmokeTestStaticRoutes` class) will trigger a `E_USER_DEPRECATED` error.
+
+If you do not want to trigger deprecations, you can customize the contents of the `SMOKE_TESTING_ROUTES_METHODS` environment variable this way:
+
+##### Customizing  the `SMOKE_TESTING_ROUTES_METHODS` environment variable 
+
+| Values | Effect |
+|--------|--------|
+| `no`, `false`, `disabled`, `0` | Disables the behavior |
+| A constant starting with `E_USER_` | The `trigger_error` function will trigger an error based on the constant name you specify |
+| Env var not set, or any non-empty value | Triggers a `E_USER_DEPRECATED` error. |
+
+
 ### 🔬 Smoke test routes **manually**
 
 Instead of (or conjointedly to) checking all routes of your app, you can run a list of URLs of your choice and have control on all request parameters and test assertions/expectations.
