@@ -1,3 +1,7 @@
+## v1.0.2
+
+* Fix Routes extractor not providing proper naming for the test argument
+
 ## v1.0.1
 
 * Add the `SMOKE_TESTING_ROUTES_METHODS` environment variable to disable the deprecation message

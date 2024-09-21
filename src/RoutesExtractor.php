@@ -39,7 +39,7 @@ final class RoutesExtractor
 
             foreach ($methods as $method) {
                 $routePath = $router->generate($routeName);
-                yield "$method {$routePath}" => ['method' => $method, 'name' => $routeName, 'path' => $routePath];
+                yield "$method {$routePath}" => ['httpMethod' => $method, 'routeName' => $routeName, 'routePath' => $routePath];
             }
         }
     }
