@@ -18,7 +18,7 @@ In the world of web development, smoke testing is often about opening all pages 
 
 Another **really important** use of smoke testing is when you work on big legacy projects that have no tests and/or no documentation.<br>
 Running basic smoke testing (like when using this library) **comes with a very low cost** and can **check the whole project's average health**.<br>
-Plus, adding **manual testing** (see the [Smoke-test routes manually](#smoke-test-routes-manually) section) allows you to have **more control** and more **advanced settings** for your tests (such as adding HTTP headers, making expectations on page content, etc.).
+Plus, adding **manual testing** (see the [Smoke-test routes manually](#-smoke-test-routes-manually) section) allows you to have **more control** and more **advanced settings** for your tests (such as adding HTTP headers, making expectations on page content, etc.).
 
 ## Installation
 
@@ -103,11 +103,10 @@ If you do not want to trigger deprecations, you can customize the contents of th
 
 ##### Customizing  the `SMOKE_TESTING_ROUTES_METHODS` environment variable 
 
-| Values | Effect |
-|--------|--------|
-| `no`, `false`, `disabled`, `0` | Disables the behavior |
-| A constant starting with `E_USER_` | The `trigger_error` function will trigger an error based on the constant name you specify |
-| Env var not set, or any non-empty value | Triggers a `E_USER_DEPRECATED` error. |
+| Values                         | Effect                                |
+|--------------------------------|---------------------------------------|
+| Not set, or a non-empty value  | Triggers a `E_USER_DEPRECATED` error. |
+| `no`, `false`, `disabled`, `0` | Does not trigger deprecation error.   |
 
 
 ### 🔬 Smoke test routes **manually**

@@ -1,3 +1,8 @@
+## v1.1.0
+
+* **BC break**: Disable possibility to use an `E_USER_*` constant in `SMOKE_TESTING_ROUTES_METHODS`.
+* Fix `SMOKE_TESTING_ROUTES_METHODS`'s inconsistent configuration.
+
 ## v1.0.2
 
 * Fix Routes extractor not providing proper naming for the test argument
