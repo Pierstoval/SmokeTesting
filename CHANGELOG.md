@@ -1,3 +1,8 @@
+## v1.1.1
+
+* Fixes how routes with dynamic host and schemes were taken in account while they shouldn't have.
+* Fix and enhance how Routes extractor references URLs of routes. If your routes have a default `host` or one or multiple `schemes`, the extractor will change the url to be an absolute URL instead of just the path, to ease debugging.
+
 ## v1.1.0
 
 * **BC break**: Disable possibility to use an `E_USER_*` constant in `SMOKE_TESTING_ROUTES_METHODS`.
