@@ -139,6 +139,30 @@ class FunctionalTest extends WebTestCase
         );
     }
 
+    public function testRouteHostFixedWithMethodGet(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/');
+
+        static::assertLessThan(
+            500,
+            $client->getResponse()->getStatusCode(),
+            'Request "GET http://test.localhost/host/fixed" for route "host_fixed" returned an internal error.',
+        );
+    }
+
+    public function testRouteSchemeFixedWithMethodGet(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/');
+
+        static::assertLessThan(
+            500,
+            $client->getResponse()->getStatusCode(),
+            'Request "GET http://localhost/scheme/fixed" for route "scheme_fixed" returned an internal error.',
+        );
+    }
+
     public function testRouteContentTypeWithMethodGet(): void
     {
         $client = static::createClient();
@@ -148,6 +172,18 @@ class FunctionalTest extends WebTestCase
             500,
             $client->getResponse()->getStatusCode(),
             'Request "GET /content-type" for route "content_type" returned an internal error.',
+        );
+    }
+
+    public function testRoutePostRouteWithMethodPost(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/');
+
+        static::assertLessThan(
+            500,
+            $client->getResponse()->getStatusCode(),
+            'Request "POST /post" for route "post_route" returned an internal error.',
         );
     }
 

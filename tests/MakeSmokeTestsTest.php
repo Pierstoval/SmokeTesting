@@ -43,11 +43,11 @@ class MakeSmokeTestsTest extends KernelTestCase
     public static function provideSmokeTestCases(): \Generator
     {
         yield 'Generate smoke tests with DTO' => [
-            'dto' => true,
+            'useDto' => true,
         ];
 
         yield 'Generate smoke tests without DTO' => [
-            'dto' => false,
+            'useDto' => false,
         ];
     }
 
