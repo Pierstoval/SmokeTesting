@@ -151,6 +151,22 @@ class FunctionalSmokeTest extends WebTestCase
         );
     }
 
+    public function testWithFixedHost(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('http://test.localhost/host/fixed')
+                ->expectRouteName('host_fixed')
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('Value: "test.localhost"')
+        );
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/host/fixed')
+                ->expectRouteName('host_fixed')
+                ->expectStatusCode(200)
+                ->expectTextToBePresent('Value: "test.localhost"')
+        );
+    }
+
     public function testGetWithContentType(): void
     {
         $this->runFunctionalTest(

@@ -21,6 +21,8 @@ jobs:
                     - { php-version: "8.2", symfony-version: "6.3", phpunit-version: "9.6" }
                     - { php-version: "8.2", symfony-version: "6.4", phpunit-version: "9.6" }
                     - { php-version: "8.2", symfony-version: "7.0", phpunit-version: "9.6" }
+                    - { php-version: "8.2", symfony-version: "7.1", phpunit-version: "9.6" }
+                    - { php-version: "8.2", symfony-version: "7.2", phpunit-version: "9.6" }
 
                     - { php-version: "8.1", symfony-version: "6.0", phpunit-version: "10" }
                     - { php-version: "8.1", symfony-version: "6.1", phpunit-version: "10" }
@@ -34,6 +36,8 @@ jobs:
                     - { php-version: "8.2", symfony-version: "6.3", phpunit-version: "10" }
                     - { php-version: "8.2", symfony-version: "6.4", phpunit-version: "10" }
                     - { php-version: "8.2", symfony-version: "7.0", phpunit-version: "10" }
+                    - { php-version: "8.2", symfony-version: "7.1", phpunit-version: "10" }
+                    - { php-version: "8.2", symfony-version: "7.2", phpunit-version: "10" }
 
         name: PHP ${{ matrix.php-version }}, Symfony ${{ matrix.symfony-version }}, PHPUnit ${{ matrix.phpunit-version }}
         steps:

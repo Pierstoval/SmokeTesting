@@ -121,6 +121,26 @@ class FunctionalTest extends WebTestCase
         );
     }
 
+    public function testRouteHostFixedWithMethodGet(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('http://test.localhost/host/fixed')
+                ->withMethod('GET')
+                ->expectRouteName('host_fixed')
+                ->appendCallableExpectation($this->assertStatusCodeLessThan500('GET', 'http://test.localhost/host/fixed'))
+        );
+    }
+
+    public function testRouteSchemeFixedWithMethodGet(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('http://localhost/scheme/fixed')
+                ->withMethod('GET')
+                ->expectRouteName('scheme_fixed')
+                ->appendCallableExpectation($this->assertStatusCodeLessThan500('GET', 'http://localhost/scheme/fixed'))
+        );
+    }
+
     public function testRouteContentTypeWithMethodGet(): void
     {
         $this->runFunctionalTest(
@@ -128,6 +148,16 @@ class FunctionalTest extends WebTestCase
                 ->withMethod('GET')
                 ->expectRouteName('content_type')
                 ->appendCallableExpectation($this->assertStatusCodeLessThan500('GET', '/content-type'))
+        );
+    }
+
+    public function testRoutePostRouteWithMethodPost(): void
+    {
+        $this->runFunctionalTest(
+            FunctionalTestData::withUrl('/post')
+                ->withMethod('POST')
+                ->expectRouteName('post_route')
+                ->appendCallableExpectation($this->assertStatusCodeLessThan500('POST', '/post'))
         );
     }
 
