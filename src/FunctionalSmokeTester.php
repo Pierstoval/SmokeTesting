@@ -155,7 +155,7 @@ trait FunctionalSmokeTester
         }
     }
 
-    private function getHttpClientInternal(string $host = null): KernelBrowser
+    private function getHttpClientInternal(?string $host = null): KernelBrowser
     {
         static $client;
 
