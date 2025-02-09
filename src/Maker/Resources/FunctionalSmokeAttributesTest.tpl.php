@@ -4,6 +4,7 @@ echo "<?php\n"; ?>
 namespace <?php echo $namespace; ?>;
 
 use PHPUnit\Framework\Attributes\TestWith;
+use PHPUnit\Framework\Attributes\TestDox;
 <?php if ($with_dto): ?>
 use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Pierstoval\SmokeTesting\FunctionalTestData;
@@ -21,6 +22,7 @@ class <?php echo $class_name; ?> extends WebTestCase
     #[TestWith(['<?php echo $route['routePath']; ?>','<?php echo $route['routeName']; ?>', '<?php echo $route['httpMethod']; ?>'])]
     <?php endif; ?>
     <?php endforeach; ?>
+    #[TestDox('/$method $url ($route)')]
     public function testRoute(string $url, string $route, string $method='GET'): void
     {
 <?php if ($with_dto): ?>
