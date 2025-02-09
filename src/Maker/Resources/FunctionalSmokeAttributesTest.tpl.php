@@ -19,11 +19,11 @@ class <?php echo $class_name; ?> extends WebTestCase
 <?php endif; ?>
 <?php foreach ($routes as $route): ?>
     <?php if (!str_starts_with($route['routePath'], '/_')): ?>
-    #[TestWith(['<?php echo $route['routePath']; ?>','<?php echo $route['routeName']; ?>', '<?php echo $route['httpMethod']; ?>'])]
+    #[TestWith(['<?php echo $route['httpMethod']; ?>', '<?php echo $route['routePath']; ?>','<?php echo $route['routeName']; ?>'])]
     <?php endif; ?>
     <?php endforeach; ?>
     #[TestDox('/$method $url ($route)')]
-    public function testRoute(string $url, string $route, string $method='GET'): void
+    public function testRoute(string $method, string $url, string $route): void
     {
 <?php if ($with_dto): ?>
         $this->runFunctionalTest(
