@@ -26,6 +26,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6|^10.0",
-        "symfony/maker-bundle": "^1.43"
+        "symfony/maker-bundle": "^1.43",
+        "nette/php-generator": "^4.1"
     }
 }

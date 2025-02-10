@@ -36,13 +36,15 @@ class MakeSmokeTests extends AbstractMaker
     public function configureCommand(Command $command, InputConfiguration $inputConfig)
     {
         $command->addOption('dto', null, InputOption::VALUE_NEGATABLE, \sprintf('Enables (or disable --no-dto) tests using the "%s" DTO class.', \basename(FunctionalTestData::class)), true);
+        $command->addOption('attributes', 'attr', InputOption::VALUE_NEGATABLE, \sprintf('Puts tests in TestWith attribute in the "%s" class', \basename(FunctionalTestData::class)), true);
+        $command->addOption('force', null, InputOption::VALUE_OPTIONAL, "overwrites the test if it already exists", false);
     }
 
-    public function configureDependencies(DependencyBuilder $dependencies)
+    public function configureDependencies(DependencyBuilder $dependencies): void
     {
     }
 
-    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
+    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         if (!$this->router->getRouteCollection()->count()) {
             throw new \RuntimeException('No routes found in the application.');
@@ -50,10 +52,18 @@ class MakeSmokeTests extends AbstractMaker
 
         $stateProviderClassNameDetails = $generator->createClassNameDetails('Functional', 'Tests', 'Test');
 
-        $generator->generateClass($stateProviderClassNameDetails->getFullName(), __DIR__.'/Resources/FunctionalSmokeTest.tpl.php', [
+        if ($input->getOption('attributes')) {
+            $template = __DIR__ . '/Resources/FunctionalSmokeAttributesTest.tpl.php';
+        } else {
+            $template = __DIR__ . '/Resources/FunctionalSmokeTest.tpl.php';
+        }
+
+        $generator->generateClass($stateProviderClassNameDetails->getFullName(), $template, [
             'routes' => RoutesExtractor::extractRoutesFromRouter($this->router),
             'with_dto' => $input->getOption('dto'),
         ]);
+
+
         $generator->writeChanges();
 
         $this->writeSuccessMessage($io);
