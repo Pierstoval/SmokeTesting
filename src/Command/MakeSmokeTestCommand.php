@@ -41,6 +41,8 @@ final class MakeSmokeTestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $dto = $input->getOption('dto');
+        $dto = true;
         $routes = RoutesExtractor::extractRoutesFromRouter($this->router);
         if (!class_exists(PhpNamespace::class)) {
             $output->writeln("Missing dependency:\n\ncomposer req nette/php-generator");
@@ -60,7 +62,8 @@ final class MakeSmokeTestCommand extends Command
 
 
 // create new classes in the namespace
-        $class = $namespace->addClass($testClassName = 'TestStaticRoutes');
+        $className = $input->getArgument('className');
+        $class = $namespace->addClass($className);
         $class->setExtends(WebTestCase::class);
         $namespace->add($class);
 
@@ -89,7 +92,7 @@ final class MakeSmokeTestCommand extends Command
             'method', 'url', 'route'
         ]);
 //        public function testRoute(string $method, string $url, string $route): void
-        if ($dto = $input->getOption('dto')) {
+        if ($dto) {
             $method->setBody(<<<'END'
         $this->runFunctionalTest(
             FunctionalTestData::withUrl($url)
@@ -119,6 +122,18 @@ END
     END
             );
 
+        } else {
+            $method->setBody(<<<'END'
+    $client = static::createClient();
+    $crawler = $client->request('GET', '/');
+
+    static::assertLessThan(
+    500,
+    $client->getResponse()->getStatusCode(),
+    'Request "$method $url for route $routeName returned an internal error.',
+    );
+END
+            );
         }
         $filename = $this->testDir . $input->getArgument('className') . '.php';
         if ($input->getOption('force') || !file_exists($filename)) {
