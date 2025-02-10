@@ -1,6 +1,6 @@
 name: PHP CI
 
-on: [push]
+on: [pull_request, push]
 
 jobs:
     build-test:
