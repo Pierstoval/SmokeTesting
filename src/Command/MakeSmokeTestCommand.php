@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
 use Symfony\Component\Routing\RouterInterface;
 
 #[AsCommand('generate:smoke', 'Generate the smoke test')]
@@ -34,7 +35,7 @@ final class MakeSmokeTestCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('className', InputArgument::OPTIONAL, 'Test class name', 'TestStaticRoutes')
+            ->addArgument('className', InputArgument::OPTIONAL, 'Test class name', 'StaticRoutesTest')
             ->addOption('dto', null, InputOption::VALUE_NONE, 'Create with DTO')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Overwrite existing files');
     }
@@ -43,6 +44,7 @@ final class MakeSmokeTestCommand extends Command
     {
         $dto = $input->getOption('dto');
         $dto = true;
+        $force = true;
         $routes = RoutesExtractor::extractRoutesFromRouter($this->router);
         if (!class_exists(PhpNamespace::class)) {
             $output->writeln("Missing dependency:\n\ncomposer req nette/php-generator");
@@ -77,7 +79,12 @@ final class MakeSmokeTestCommand extends Command
         ]);
         // get the routes
         foreach ($routes as $route) {
-            //        #[TestWith(['GET', '/app', 'app_app'])]
+            // these patterns could also be defined in the bundle
+            foreach (['_wdt_','_profiler_'] as $prefix) {
+                if (str_starts_with($route['routeName'], $prefix)) {
+                    continue 2;
+                }
+            }
             $method->addAttribute(TestWith::class,
                 [
                     [
