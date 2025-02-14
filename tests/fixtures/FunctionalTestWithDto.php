@@ -163,7 +163,7 @@ class FunctionalTest extends WebTestCase
 
     public function assertStatusCodeLessThan500(string $method, string $url): \Closure
     {
-        return function (KernelBrowser $browser) use ($method, $url) {
+        return static function (KernelBrowser $browser) use ($method, $url) {
             $statusCode = $browser->getResponse()->getStatusCode();
             $routeName = $browser->getRequest()->attributes->get('_route', 'unknown');
 

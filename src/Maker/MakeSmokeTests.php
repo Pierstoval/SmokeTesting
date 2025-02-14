@@ -35,9 +35,21 @@ class MakeSmokeTests extends AbstractMaker
 
     public function configureCommand(Command $command, InputConfiguration $inputConfig)
     {
-        $command->addOption('dto', null, InputOption::VALUE_NEGATABLE, \sprintf('Enables (or disable --no-dto) tests using the "%s" DTO class.', \basename(FunctionalTestData::class)), true);
-        $command->addOption('attributes', 'attr', InputOption::VALUE_NEGATABLE, \sprintf('Puts tests in TestWith attribute in the "%s" class', \basename(FunctionalTestData::class)), true);
-        $command->addOption('force', null, InputOption::VALUE_OPTIONAL, "overwrites the test if it already exists", false);
+        $command->addOption('dto', 'd', InputOption::VALUE_NEGATABLE, \sprintf('Enables (or disable --no-dto) tests using the "%s" DTO class.', \basename(\str_replace('\\', '/', FunctionalTestData::class))), true);
+        $command->addOption('use-attributes', 'a', InputOption::VALUE_NONE, 'If enabled, uses in #[TestWith] attribute to provide routes.');
+        $command->addOption('use-provider', 'p', InputOption::VALUE_NONE, 'If enabled, uses in #[DataProvider] attribute to provide routes.');
+    }
+
+    public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        parent::interact($input, $io, $command);
+
+        if ($input->getOption('use-attributes') && $input->getOption('use-provider')) {
+            throw new \RuntimeException(\sprintf(
+                'Cannot set both "%s" and "%s" attribute at the same time. Use only one of them.',
+                    'use-attributes', 'use-provider'
+            ));
+        }
     }
 
     public function configureDependencies(DependencyBuilder $dependencies): void
@@ -52,8 +64,10 @@ class MakeSmokeTests extends AbstractMaker
 
         $stateProviderClassNameDetails = $generator->createClassNameDetails('Functional', 'Tests', 'Test');
 
-        if ($input->getOption('attributes')) {
-            $template = __DIR__ . '/Resources/FunctionalSmokeAttributesTest.tpl.php';
+        if ($input->getOption('use-attributes')) {
+            $template = __DIR__ . '/Resources/FunctionalSmokeTest.attributes.tpl.php';
+        } elseif ($input->getOption('use-provider')) {
+            $template = __DIR__ . '/Resources/FunctionalSmokeTest.provider.tpl.php';
         } else {
             $template = __DIR__ . '/Resources/FunctionalSmokeTest.tpl.php';
         }
@@ -62,7 +76,6 @@ class MakeSmokeTests extends AbstractMaker
             'routes' => RoutesExtractor::extractRoutesFromRouter($this->router),
             'with_dto' => $input->getOption('dto'),
         ]);
-
 
         $generator->writeChanges();
 

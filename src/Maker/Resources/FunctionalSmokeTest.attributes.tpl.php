@@ -3,6 +3,8 @@ echo "<?php\n"; ?>
 
 namespace <?php echo $namespace; ?>;
 
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\TestWith;
 <?php if ($with_dto): ?>
 use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Pierstoval\SmokeTesting\FunctionalTestData;
@@ -15,16 +17,20 @@ class <?php echo $class_name; ?> extends WebTestCase
 <?php if ($with_dto): ?>
     use FunctionalSmokeTester;
 <?php endif; ?>
-<?php foreach ($routes as $route): ?>
 
-    public function testRoute<?php echo ucfirst(preg_replace_callback('~_([a-z0-9])~isUu', function($matches) {return strtoupper($matches[1]);}, $route['routeName'])).'WithMethod'.ucfirst(strtolower($route['httpMethod'])); ?>(): void
+<?php foreach ($routes as $route){
+    if (str_starts_with($route['routePath'], '/_')) { continue; } ?>
+    #[TestWith(['<?php echo $route['httpMethod']; ?>', '<?php echo $route['routePath']; ?>', '<?php echo $route['routeName']; ?>'])]
+<?php } ?>
+    #[TestDox('$method $url ($route)')]
+    public function testRoute(string $method, string $url, string $route): void
     {
 <?php if ($with_dto): ?>
         $this->runFunctionalTest(
-            FunctionalTestData::withUrl('<?php echo $route['routePath']; ?>')
-                ->withMethod('<?php echo $route['httpMethod']; ?>')
-                ->expectRouteName('<?php echo $route['routeName']; ?>')
-                ->appendCallableExpectation($this->assertStatusCodeLessThan500('<?php echo $route['httpMethod']; ?>', '<?php echo $route['routePath']; ?>'))
+            FunctionalTestData::withUrl($url)
+                ->withMethod($method)
+                ->expectRouteName($route)
+                ->appendCallableExpectation($this->assertStatusCodeLessThan500($method, $url))
         );
 <?php else: ?>
         $client = static::createClient();
@@ -33,11 +39,13 @@ class <?php echo $class_name; ?> extends WebTestCase
         static::assertLessThan(
             500,
             $client->getResponse()->getStatusCode(),
-            'Request "<?php echo $route['httpMethod'].' '.$route['routePath']; ?>" for route "<?php echo $route['routeName']; ?>" returned an internal error.',
+            \sprintf(
+                'Request "%s %s" for route "%s" returned an internal error.',
+                $method, $url, $route
+            ),
         );
 <?php endif; ?>
     }
-    <?php endforeach; ?>
 
 <?php if ($with_dto): ?>
     public function assertStatusCodeLessThan500(string $method, string $url): \Closure

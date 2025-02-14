@@ -17,18 +17,31 @@ class MakeSmokeTestsTest extends KernelTestCase
     /**
      * @dataProvider provideSmokeTestCases
      */
-    public function testMakeStateProvider(bool $useDto): void
+    public function testMakeStateProvider(bool $useDto, bool $useAttributes = false, bool $useProvider = false): void
     {
         $tester = new CommandTester((new Application(self::bootKernel()))->find('make:smoke-tests'));
-        $tester->execute([$useDto ? '--dto' : '--no-dto' => $useDto]);
+        $params = [
+            $useDto ? '--dto' : '--no-dto' => $useDto,
+        ];
+        if ($useAttributes) {
+            $params['--use-attributes'] = true;
+        }
+        if ($useProvider) {
+            $params['--use-provider'] = true;
+        }
+        $tester->execute($params);
 
         $newTestFile = self::generatedTestFile();
         $this->assertFileExists($newTestFile);
 
-        $comparedFile = $useDto
-            ? __DIR__ . '/fixtures/FunctionalTestWithDto.php'
-            : __DIR__ . '/fixtures/FunctionalTestWithoutDto.php'
-        ;
+        $comparedFile = match (true) {
+            $useDto && $useAttributes => __DIR__ . '/fixtures/FunctionalTestWithDto.attributes.php',
+            $useDto && $useProvider => __DIR__ . '/fixtures/FunctionalTestWithDto.provider.php',
+            !$useDto && $useAttributes => __DIR__ . '/fixtures/FunctionalTestWithoutDto.attributes.php',
+            !$useDto && $useProvider => __DIR__ . '/fixtures/FunctionalTestWithoutDto.provider.php',
+            $useDto && !$useAttributes && !$useProvider => __DIR__ . '/fixtures/FunctionalTestWithDto.php',
+            !$useDto && !$useAttributes && !$useProvider => __DIR__ . '/fixtures/FunctionalTestWithoutDto.php',
+        };
 
         // Unify line endings
         $expected = preg_replace("~\n +\n~", "\n\n", preg_replace('~\R~u', "\n", file_get_contents($comparedFile)));
@@ -42,13 +55,12 @@ class MakeSmokeTestsTest extends KernelTestCase
 
     public static function provideSmokeTestCases(): \Generator
     {
-        yield 'Generate smoke tests with DTO' => [
-            'useDto' => true,
-        ];
-
-        yield 'Generate smoke tests without DTO' => [
-            'useDto' => false,
-        ];
+        yield 'Generate smoke tests with DTO' => ['useDto' => true];
+        yield 'Generate smoke tests without DTO' => ['useDto' => false];
+        yield 'Generate smoke tests with DTO and TestWith attributes' => ['useDto' => true, 'useAttributes' => true];
+        yield 'Generate smoke tests without DTO and TestWith attributes' => ['useDto' => false, 'useAttributes' => true];
+        yield 'Generate smoke tests with DTO and DatProvider' => ['useDto' => true, 'useProvider' => true];
+        yield 'Generate smoke tests without DTO and DatProvider' => ['useDto' => false, 'useProvider' => true];
     }
 
     private static function generatedTestFile(): string
