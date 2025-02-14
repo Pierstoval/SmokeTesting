@@ -35,14 +35,28 @@ class MakeSmokeTests extends AbstractMaker
 
     public function configureCommand(Command $command, InputConfiguration $inputConfig)
     {
-        $command->addOption('dto', null, InputOption::VALUE_NEGATABLE, \sprintf('Enables (or disable --no-dto) tests using the "%s" DTO class.', \basename(FunctionalTestData::class)), true);
+        $command->addOption('dto', 'd', InputOption::VALUE_NEGATABLE, \sprintf('Enables (or disable --no-dto) tests using the "%s" DTO class.', \basename(\str_replace('\\', '/', FunctionalTestData::class))), true);
+        $command->addOption('use-attributes', 'a', InputOption::VALUE_NONE, 'If enabled, uses in #[TestWith] attribute to provide routes.');
+        $command->addOption('use-provider', 'p', InputOption::VALUE_NONE, 'If enabled, uses in #[DataProvider] attribute to provide routes.');
     }
 
-    public function configureDependencies(DependencyBuilder $dependencies)
+    public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
+    {
+        parent::interact($input, $io, $command);
+
+        if ($input->getOption('use-attributes') && $input->getOption('use-provider')) {
+            throw new \RuntimeException(\sprintf(
+                'Cannot set both "%s" and "%s" attribute at the same time. Use only one of them.',
+                    'use-attributes', 'use-provider'
+            ));
+        }
+    }
+
+    public function configureDependencies(DependencyBuilder $dependencies): void
     {
     }
 
-    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
+    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         if (!$this->router->getRouteCollection()->count()) {
             throw new \RuntimeException('No routes found in the application.');
@@ -50,10 +64,19 @@ class MakeSmokeTests extends AbstractMaker
 
         $stateProviderClassNameDetails = $generator->createClassNameDetails('Functional', 'Tests', 'Test');
 
-        $generator->generateClass($stateProviderClassNameDetails->getFullName(), __DIR__.'/Resources/FunctionalSmokeTest.tpl.php', [
+        if ($input->getOption('use-attributes')) {
+            $template = __DIR__ . '/Resources/FunctionalSmokeTest.attributes.tpl.php';
+        } elseif ($input->getOption('use-provider')) {
+            $template = __DIR__ . '/Resources/FunctionalSmokeTest.provider.tpl.php';
+        } else {
+            $template = __DIR__ . '/Resources/FunctionalSmokeTest.tpl.php';
+        }
+
+        $generator->generateClass($stateProviderClassNameDetails->getFullName(), $template, [
             'routes' => RoutesExtractor::extractRoutesFromRouter($this->router),
             'with_dto' => $input->getOption('dto'),
         ]);
+
         $generator->writeChanges();
 
         $this->writeSuccessMessage($io);

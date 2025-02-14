@@ -1,3 +1,9 @@
+## v1.2.0
+
+* Make sure the library is usable for PHP 8.3 and 8.4
+* Add `--use-attributes` option to the `make:smoke-tests` command: this will generate smoke tests using PHPUnit's `#[TestWith]` attribute 
+* Add `--use-provider` option to the `make:smoke-tests` command: this will generate smoke tests using PHPUnit's `#[DataProvider]` attribute<br>(note: both aforementioned attributes cannot be used at the same time)
+
 ## v1.1.1
 
 * Fixes how routes with dynamic host and schemes were taken in account while they shouldn't have.

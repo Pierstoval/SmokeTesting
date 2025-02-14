@@ -10,7 +10,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteGetParamWithDefaultWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -22,7 +22,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteGet200WithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -34,7 +34,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteGet302WithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -46,7 +46,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteGet400WithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -58,7 +58,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteGet500WithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -70,7 +70,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteGetWithPayloadWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -82,7 +82,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteJsonValidWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -94,7 +94,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteJsonValidHeaderWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -106,7 +106,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteJsonMissingHeaderWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -118,7 +118,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteJsonInvalidWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -130,7 +130,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteCookieValueWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -142,7 +142,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteHostFixedWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -154,7 +154,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteSchemeFixedWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -166,7 +166,7 @@ class FunctionalTest extends WebTestCase
     public function testRouteContentTypeWithMethodGet(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
@@ -178,7 +178,7 @@ class FunctionalTest extends WebTestCase
     public function testRoutePostRouteWithMethodPost(): void
     {
         $client = static::createClient();
-        $crawler = $client->request('GET', '/');
+        $client->request('GET', '/');
 
         static::assertLessThan(
             500,
