@@ -6,6 +6,8 @@ Particularly useful for big untested Symfony legacy projects.
 
 This lib was originally inspired by a [tweet from @SmaineDev](https://twitter.com/SmaineDev/status/1559542937696043008), you can find him on [his Github (@ismail1432)](https://github.com/ismail1432) too.
 
+**ℹ Note:** This library is compatible starting with PHP 8.1, Symfony 6.1 and PHPUnit 9.6, and is tested in almost all cases (almost...).<br>There are some unusual cases where it doesn't work entirely, but it will also depend on the rest of your stack, because some dependencies might induce incompatibilities with each other that are not tested (and possibly quite hard to test) in this package.<br>That said, if you want to help making this package compatible with lower versions of PHP and Symfony, to help legacy projects have at least a suite with smoke tests, feel free to open an issue or a PR!
+
 ## Why smoke testing
 
 [Smoke testing](https://en.wikipedia.org/wiki/Smoke_testing_(software)) is a way to quickly assert whether your project is viable for *unit* or *functional* testing.

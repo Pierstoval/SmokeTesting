@@ -1,3 +1,7 @@
+## v1.2.1
+
+* Ensure compatibility with PHPUnit 12.
+
 ## v1.2.0
 
 * Make sure the library is usable for PHP 8.3 and 8.4

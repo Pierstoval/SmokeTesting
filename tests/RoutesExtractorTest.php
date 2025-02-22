@@ -64,6 +64,7 @@ class RoutesExtractorTest extends TestCase
     /**
      * @dataProvider provideDynamicRoutes
      */
+    #[DataProvider('provideDynamicRoutes')]
     public function test_dynamic_routes_are_not_included(string $routeName, Route $route): void
     {
         $router = $this->getRouter(function () use ($routeName, $route) {

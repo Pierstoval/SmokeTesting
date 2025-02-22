@@ -2,83 +2,30 @@
 
 namespace Pierstoval\SmokeTesting;
 
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use function count;
-use function sprintf;
-use Generator;
-use RuntimeException;
-use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouterInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Pierstoval\SmokeTesting\PhpUnitVersions\PhpUnit9;
+use Pierstoval\SmokeTesting\PhpUnitVersions\PhpUnit12;
 
-abstract class SmokeTestStaticRoutes extends WebTestCase
-{
-    protected function beforeRequest(KernelBrowser $client, string $routeName, string $routePath): void
-    {
-        // To be overriden by the end-user.
-    }
+use PHPUnit\Runner\Version;
 
-    protected function afterRequest(KernelBrowser $client, string $routeName, string $routePath): void
+if (((float) Version::series()) < 12) {
+    abstract class SmokeTestStaticRoutes extends PhpUnit9
     {
-        // To be overriden by the end-user.
-    }
-
-    protected function afterAssertion(KernelBrowser $client, string $routeName, string $routePath): void
-    {
-        // To be overriden by the end-user.
-    }
-
-    /**
-     * @return Generator<string, Route>
-     */
-    public static function provideRouteCollection(): Generator
-    {
-        if (!is_a(self::class, WebTestCase::class, true)) {
-            throw new RuntimeException(sprintf('The "%s" trait trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
+        /**
+         * @dataProvider provideRouteCollection
+         */
+        public function testRoutesDoNotReturnInternalError(string $httpMethod, string $routeName, string $routePath): void
+        {
+            parent::testRoutesDoNotReturnInternalError($httpMethod, $routeName, $routePath);
         }
-
-        static::bootKernel();
-
-        /** @var TestContainer $container */
-        $container = static::getContainer();
-
-        /** @var RouterInterface $router */
-        $router = $container->get(RouterInterface::class);
-
-        $routes = $router->getRouteCollection();
-
-        static::ensureKernelShutdown();
-
-        if (!$routes->count()) {
-            throw new RuntimeException('No routes found in the application.');
-        }
-
-        yield from RoutesExtractor::extractRoutesFromRouter($router);
     }
-
-    /**
-     * @dataProvider provideRouteCollection
-     *
-     * @test
-     */
-    public function testRoutesDoNotReturnInternalError(string $httpMethod, string $routeName, string $routePath): void
+} else {
+    abstract class SmokeTestStaticRoutes extends PhpUnit12
     {
-        $client = static::createClient();
-
-        $this->beforeRequest($client, $routeName, $routePath);
-
-        $client->request($httpMethod, $routePath);
-
-        $this->afterRequest($client, $routeName, $routePath);
-
-        $response = $client->getResponse();
-        static::assertLessThan(
-            500,
-            $response->getStatusCode(),
-            sprintf('Request "%s %s" for route "%s" returned an internal error.', $httpMethod, $routePath, $routeName),
-        );
-
-        $this->afterAssertion($client, $routeName, $routePath);
+        #[DataProvider('provideRouteCollection')]
+        public function testRoutesDoNotReturnInternalError(string $httpMethod, string $routeName, string $routePath): void
+        {
+            parent::testRoutesDoNotReturnInternalError($httpMethod, $routeName, $routePath);
+        }
     }
 }
