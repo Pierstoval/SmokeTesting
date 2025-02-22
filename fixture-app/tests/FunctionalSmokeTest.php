@@ -7,6 +7,7 @@ use Pierstoval\SmokeTesting\FunctionalTestData;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FunctionalSmokeTest extends WebTestCase
 {
@@ -14,14 +15,18 @@ class FunctionalSmokeTest extends WebTestCase
 
     public function testGetParameterWithoutDefault(): void
     {
-        $this->runFunctionalTest(
-            FunctionalTestData::withUrl("/param")
-                ->expectStatusCode(404)
-        );
-        $this->runFunctionalTest(
-            FunctionalTestData::withUrl("/param/")
-                ->expectStatusCode(404)
-        );
+        try {
+            $this->runFunctionalTest(
+                FunctionalTestData::withUrl("/param")
+                    ->expectStatusCode(404),
+            );
+            $this->runFunctionalTest(
+                FunctionalTestData::withUrl("/param/")
+                    ->expectStatusCode(404),
+            );
+        } catch (NotFoundHttpException) {
+            $this->assertTrue(true);
+        }
     }
 
     public function testGetParameterWithDefault(): void

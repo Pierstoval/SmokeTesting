@@ -1,34 +1,44 @@
 <?php declare(strict_types=1);
 echo "<?php\n"; ?>
 
-namespace <?php echo $namespace; ?>;
+namespace <?php echo $namespace ?? 'UndefinedNamespace'; ?>;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
 use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Pierstoval\SmokeTesting\FunctionalTestData;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 <?php endif; ?>
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class <?php echo $class_name; ?> extends WebTestCase
+class <?php echo $class_name ?? 'UndefinedClassName' ?> extends WebTestCase
 {
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
     use FunctionalSmokeTester;
 <?php endif; ?>
 
     public static function provideRoutes(): \Generator
     {
-    <?php foreach ($routes as $route): ?>
-        <?php if (str_starts_with($route['routePath'], '/_')) continue;
-        ?> yield '<?php echo $route['httpMethod']; ?> <?php echo $route['routePath']; ?>' => ['<?php echo $route['httpMethod']; ?>', '<?php echo $route['routePath']; ?>','<?php echo $route['routeName']; ?>'];
-    <?php endforeach; ?>
+        <?php foreach ($routes ?? [] as $route) {
+        if (\str_starts_with($route['routePath'], '/_')) {
+            continue;
+        }
+        echo \sprintf(
+            "yield '%s %s' => ['%s', '%s', '%s'];\n        ",
+            $route['httpMethod'],
+            $route['routePath'],
+            $route['httpMethod'],
+            $route['routePath'],
+            $route['routeName']
+        );
+        } ?>
+
     }
 
     #[DataProvider('provideRoutes')]
     public function testRoute(string $method, string $url, string $route): void
     {
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
         $this->runFunctionalTest(
             FunctionalTestData::withUrl($url)
                 ->withMethod($method)
@@ -36,22 +46,22 @@ class <?php echo $class_name; ?> extends WebTestCase
                 ->appendCallableExpectation($this->assertStatusCodeLessThan500($method, $url))
         );
 <?php else: ?>
-    $client = static::createClient();
-    $client->request($method, $url);
+        $client = static::createClient();
+        $client->request($method, $url);
 
-    static::assertLessThan(
-    500,
-    $client->getResponse()->getStatusCode(),
-    \sprintf(
-        'Request "%s %s" for route "%s" returned an internal error.',
-        $method, $url, $route
-    ),
-    );
+        static::assertLessThan(
+            500,
+            $client->getResponse()->getStatusCode(),
+            \sprintf(
+                'Request "%s %s" for route "%s" returned an internal error.',
+                $method, $url, $route
+            ),
+        );
 <?php endif; ?>
 
     }
 
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
     public function assertStatusCodeLessThan500(string $method, string $url): \Closure
     {
         return static function (KernelBrowser $browser) use ($method, $url) {

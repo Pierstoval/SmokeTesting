@@ -1,6 +1,9 @@
 name: PHP CI
 
-on: [pull_request, push]
+on:
+  pull_request:
+  push:
+    branches: ["main"]
 
 jobs:
     build-test:
@@ -58,6 +61,30 @@ jobs:
                     - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "10" }
                     - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "10" }
                     - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "10" }
+
+                    #- { php-version: "8.3", symfony-version: "6.1", phpunit-version: "11" } # Apparently conflicts with nikic/php-parser
+                    #- { php-version: "8.3", symfony-version: "6.2", phpunit-version: "11" } # Apparently conflicts with nikic/php-parser
+                    - { php-version: "8.3", symfony-version: "6.3", phpunit-version: "11" }
+                    - { php-version: "8.3", symfony-version: "6.4", phpunit-version: "11" }
+                    - { php-version: "8.3", symfony-version: "7.0", phpunit-version: "11" }
+                    - { php-version: "8.3", symfony-version: "7.1", phpunit-version: "11" }
+                    - { php-version: "8.3", symfony-version: "7.2", phpunit-version: "11" }
+
+                    - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "11" }
+                    - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "11" }
+                    - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "11" }
+
+                    #- { php-version: "8.3", symfony-version: "6.1", phpunit-version: "12" } # Apparently conflicts with nikic/php-parser
+                    #- { php-version: "8.3", symfony-version: "6.2", phpunit-version: "12" } # Apparently conflicts with nikic/php-parser
+                    - { php-version: "8.3", symfony-version: "6.3", phpunit-version: "12" }
+                    - { php-version: "8.3", symfony-version: "6.4", phpunit-version: "12" }
+                    - { php-version: "8.3", symfony-version: "7.0", phpunit-version: "12" }
+                    - { php-version: "8.3", symfony-version: "7.1", phpunit-version: "12" }
+                    - { php-version: "8.3", symfony-version: "7.2", phpunit-version: "12" }
+
+                    - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "12" }
+                    - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "12" }
+                    - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "12" }
 
         name: PHP ${{ matrix.php-version }}, Symfony ${{ matrix.symfony-version }}, PHPUnit ${{ matrix.phpunit-version }}
         steps:

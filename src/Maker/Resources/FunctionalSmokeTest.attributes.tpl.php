@@ -1,31 +1,31 @@
 <?php declare(strict_types=1);
 echo "<?php\n"; ?>
 
-namespace <?php echo $namespace; ?>;
+namespace <?php echo $namespace ?? 'UndefinedNamespace'; ?>;
 
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\TestWith;
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
 use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Pierstoval\SmokeTesting\FunctionalTestData;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 <?php endif; ?>
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class <?php echo $class_name; ?> extends WebTestCase
+class <?php echo $class_name ?? 'UndefinedClassName' ?> extends WebTestCase
 {
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
     use FunctionalSmokeTester;
 <?php endif; ?>
 
-<?php foreach ($routes as $route){
+<?php foreach ($routes ?? [] as $route){
     if (str_starts_with($route['routePath'], '/_')) { continue; } ?>
     #[TestWith(['<?php echo $route['httpMethod']; ?>', '<?php echo $route['routePath']; ?>', '<?php echo $route['routeName']; ?>'])]
 <?php } ?>
     #[TestDox('$method $url ($route)')]
     public function testRoute(string $method, string $url, string $route): void
     {
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
         $this->runFunctionalTest(
             FunctionalTestData::withUrl($url)
                 ->withMethod($method)
@@ -47,7 +47,7 @@ class <?php echo $class_name; ?> extends WebTestCase
 <?php endif; ?>
     }
 
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
     public function assertStatusCodeLessThan500(string $method, string $url): \Closure
     {
         return static function (KernelBrowser $browser) use ($method, $url) {

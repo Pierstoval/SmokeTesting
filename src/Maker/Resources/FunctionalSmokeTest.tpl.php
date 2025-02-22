@@ -1,25 +1,25 @@
 <?php declare(strict_types=1);
 echo "<?php\n"; ?>
 
-namespace <?php echo $namespace; ?>;
+namespace <?php echo $namespace ?? 'UndefinedNamespace'; ?>;
 
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
 use Pierstoval\SmokeTesting\FunctionalSmokeTester;
 use Pierstoval\SmokeTesting\FunctionalTestData;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 <?php endif; ?>
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class <?php echo $class_name; ?> extends WebTestCase
+class <?php echo $class_name ?? 'UndefinedClassName' ?> extends WebTestCase
 {
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
     use FunctionalSmokeTester;
 <?php endif; ?>
-<?php foreach ($routes as $route): ?>
+<?php foreach ($routes ?? [] as $route): ?>
 
     public function testRoute<?php echo ucfirst(preg_replace_callback('~_([a-z0-9])~isUu', function($matches) {return strtoupper($matches[1]);}, $route['routeName'])).'WithMethod'.ucfirst(strtolower($route['httpMethod'])); ?>(): void
     {
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
         $this->runFunctionalTest(
             FunctionalTestData::withUrl('<?php echo $route['routePath']; ?>')
                 ->withMethod('<?php echo $route['httpMethod']; ?>')
@@ -39,7 +39,7 @@ class <?php echo $class_name; ?> extends WebTestCase
     }
     <?php endforeach; ?>
 
-<?php if ($with_dto): ?>
+<?php if ($with_dto ?? false): ?>
     public function assertStatusCodeLessThan500(string $method, string $url): \Closure
     {
         return static function (KernelBrowser $browser) use ($method, $url) {

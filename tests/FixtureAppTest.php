@@ -3,79 +3,47 @@
 namespace Pierstoval\SmokeTesting\Tests;
 
 use App\Tests\FunctionalSmokeTest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\ErrorHandler\ErrorHandler;
 
 require_once __DIR__.'/../fixture-app/tests/bootstrap.php';
 
 class FixtureAppTest extends TestCase
 {
-    private function runFixtureTest(string $testMethod): ?\Throwable
+    public static function provideRoutes(): array
     {
-        $error = null;
+        return [
+            'testGet200' => ['testGet200'],
+            'testGet400' => ['testGet400'],
+            'testGet500' => ['testGet500'],
+            'testGetParameterWithDefault' => ['testGetParameterWithDefault'],
+            'testGetWithContentType' => ['testGetWithContentType'],
+            'testGetWithEmptyPayload' => ['testGetWithEmptyPayload'],
+            'testGetWithPayload' => ['testGetWithPayload'],
+            'testGetWithPreRequestCallback' => ['testGetWithPreRequestCallback'],
+            'testGetWithValidJson' => ['testGetWithValidJson'],
+            'testGetWithValidJsonHeader' => ['testGetWithValidJsonHeader'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideRoutes
+     * @runInSeparateProcess
+     */
+    #[DataProvider('provideRoutes')]
+    #[RunInSeparateProcess]
+    public function testInternalRoute(string $method): void
+    {
         try {
-            $test = new FunctionalSmokeTest($testMethod);
-            $test->{$testMethod}();
-        } catch (\Throwable $e) {
-            $error = $e;
+            $result = $this->runFixtureTest($method);
+        } catch (\Exception $e) {
+            self::fail(\sprintf('EXCEPTION: %s ====== %s', get_class($e), $e->getMessage()));
         }
 
-        return $error;
-    }
-
-    public function testGet200(): void
-    {
-        self::assertNull($this->runFixtureTest('testGet200'));
-    }
-
-    public function testGet400(): void
-    {
-        self::assertNull($this->runFixtureTest('testGet400'));
-    }
-
-    public function testGet500(): void
-    {
-        self::assertNull($this->runFixtureTest('testGet500'));
-    }
-
-    public function testGetParameterWithoutDefault(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetParameterWithoutDefault'));
-    }
-
-    public function testGetParameterWithDefault(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetParameterWithDefault'));
-    }
-
-    public function testGetWithEmptyPayload(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetWithEmptyPayload'));
-    }
-
-    public function testGetWithPayload(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetWithPayload'));
-    }
-
-    public function testGetWithValidJson(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetWithValidJson'));
-    }
-
-    public function testGetWithValidJsonHeader(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetWithValidJsonHeader'));
-    }
-
-    public function testGetWithPreRequestCallback(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetWithPreRequestCallback'));
-    }
-
-    public function testGetWithContentType(): void
-    {
-        self::assertNull($this->runFixtureTest('testGetWithContentType'));
+        self::assertNull($result);
     }
 
     public function testGetWithMissingJsonResponseHeader(): void
@@ -97,5 +65,18 @@ class FixtureAppTest extends TestCase
             ERR
             , $exception->getMessage()
         );
+    }
+
+    private function runFixtureTest(string $testMethod): ?\Throwable
+    {
+        $error = null;
+        try {
+            $test = new FunctionalSmokeTest($testMethod);
+            $test->{$testMethod}();
+        } catch (\Throwable $e) {
+            $error = $e;
+        }
+
+        return $error;
     }
 }

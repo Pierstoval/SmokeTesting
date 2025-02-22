@@ -2,6 +2,7 @@
 
 namespace Pierstoval\SmokeTesting\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -17,6 +18,7 @@ class MakeSmokeTestsTest extends KernelTestCase
     /**
      * @dataProvider provideSmokeTestCases
      */
+    #[DataProvider('provideSmokeTestCases')]
     public function testMakeStateProvider(bool $useDto, bool $useAttributes = false, bool $useProvider = false): void
     {
         $tester = new CommandTester((new Application(self::bootKernel()))->find('make:smoke-tests'));
@@ -44,8 +46,8 @@ class MakeSmokeTestsTest extends KernelTestCase
         };
 
         // Unify line endings
-        $expected = preg_replace("~\n +\n~", "\n\n", preg_replace('~\R~u', "\n", file_get_contents($comparedFile)));
-        $result = preg_replace("~\n +\n~", "\n\n", preg_replace('~\R~u', "\n", file_get_contents($newTestFile)));
+        $expected = \preg_replace('~\s+\n~u', "\n", \file_get_contents($comparedFile));
+        $result = \preg_replace('~\s+\n~u', "\n", \file_get_contents($newTestFile));
         $this->assertSame($expected, $result);
 
         $display = $tester->getDisplay();
@@ -59,8 +61,8 @@ class MakeSmokeTestsTest extends KernelTestCase
         yield 'Generate smoke tests without DTO' => ['useDto' => false];
         yield 'Generate smoke tests with DTO and TestWith attributes' => ['useDto' => true, 'useAttributes' => true];
         yield 'Generate smoke tests without DTO and TestWith attributes' => ['useDto' => false, 'useAttributes' => true];
-        yield 'Generate smoke tests with DTO and DatProvider' => ['useDto' => true, 'useProvider' => true];
-        yield 'Generate smoke tests without DTO and DatProvider' => ['useDto' => false, 'useProvider' => true];
+        yield 'Generate smoke tests with DTO and DataProvider' => ['useDto' => true, 'useProvider' => true];
+        yield 'Generate smoke tests without DTO and DataProvider' => ['useDto' => false, 'useProvider' => true];
     }
 
     private static function generatedTestFile(): string

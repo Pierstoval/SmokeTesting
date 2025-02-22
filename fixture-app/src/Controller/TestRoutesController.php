@@ -11,13 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TestRoutesController extends AbstractController
 {
-    /** @Route("/param/{id}", name="get_param_without_default", methods={"GET"}) */
-    #[Route("/param/{id}", name: "get_param_without_default", methods: ["GET"])]
-    public function getParameterWithoutDefault(string $id): Response
-    {
-        return new Response("Content: $id");
-    }
-
     /** @Route("/other_param/{id}", name="get_param_with_default", defaults={"id": "default_value"}, methods={"GET"}) */
     #[Route("/other_param/{id}", name: "get_param_with_default", defaults: ["id" => "default_value"], methods: ["GET"])]
     public function getParameterWithDefault(string $id): Response
