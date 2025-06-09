@@ -1,3 +1,8 @@
+## v1.2.2
+
+* Fix issues with phpunit test cases
+* (CI) Remove github action deprecation
+
 ## v1.2.1
 
 * Ensure compatibility with PHPUnit 12.
