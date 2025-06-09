@@ -2,8 +2,9 @@
 
 namespace Pierstoval\SmokeTesting\PhpUnitVersions;
 
+use Pierstoval\SmokeTesting\RoutesExtractor;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use function count;
+use function is_a;
 use function sprintf;
 use Generator;
 use RuntimeException;

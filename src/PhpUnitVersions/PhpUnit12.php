@@ -2,8 +2,10 @@
 
 namespace Pierstoval\SmokeTesting\PhpUnitVersions;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Pierstoval\SmokeTesting\RoutesExtractor;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use function is_a;
 use function sprintf;
 use Generator;
 use RuntimeException;
@@ -57,6 +59,7 @@ abstract class PhpUnit12 extends WebTestCase
         yield from RoutesExtractor::extractRoutesFromRouter($router);
     }
 
+    #[DataProvider('provideRouteCollection')]
     public function testRoutesDoNotReturnInternalError(string $httpMethod, string $routeName, string $routePath): void
     {
         $client = static::createClient();
