@@ -85,6 +85,8 @@ jobs:
                     - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "12" }
                     - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "12" }
                     - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "12" }
+                    - { php-version: "8.4", symfony-version: "7.4", phpunit-version: "12" }
+                    - { php-version: "8.4", symfony-version: "8.0", phpunit-version: "12" }
 
         name: PHP ${{ matrix.php-version }}, Symfony ${{ matrix.symfony-version }}, PHPUnit ${{ matrix.phpunit-version }}
         steps:
