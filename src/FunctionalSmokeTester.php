@@ -61,8 +61,8 @@ trait FunctionalSmokeTester
         $crawler = $client->request(
             $testData->getHttpMethod(),
             $testData->getUrl(),
-            [],
-            [],
+            $testData->getRequestParameters(),
+            $testData->getRequestFiles(),
             $serverParameters,
             $testData->getRequestPayload(),
         );

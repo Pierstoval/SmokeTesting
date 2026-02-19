@@ -1,3 +1,8 @@
+## v1.2.3
+
+* Add `FunctionalTestData->withFile()`
+* Add `FunctionalTestData->withRequestParameter()`
+
 ## v1.2.2
 
 * Fix issues with phpunit test cases

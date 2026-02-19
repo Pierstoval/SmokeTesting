@@ -12,79 +12,55 @@ jobs:
         strategy:
             matrix:
                 include:
-                    - { php-version: "8.1", symfony-version: "6.1", phpunit-version: "9.6" }
-                    - { php-version: "8.1", symfony-version: "6.2", phpunit-version: "9.6" }
-                    - { php-version: "8.1", symfony-version: "6.3", phpunit-version: "9.6" }
+                    # PHPUnit 9.6
                     - { php-version: "8.1", symfony-version: "6.4", phpunit-version: "9.6" }
 
-                    - { php-version: "8.2", symfony-version: "6.1", phpunit-version: "9.6" }
-                    - { php-version: "8.2", symfony-version: "6.2", phpunit-version: "9.6" }
-                    - { php-version: "8.2", symfony-version: "6.3", phpunit-version: "9.6" }
                     - { php-version: "8.2", symfony-version: "6.4", phpunit-version: "9.6" }
-                    - { php-version: "8.2", symfony-version: "7.0", phpunit-version: "9.6" }
-                    - { php-version: "8.2", symfony-version: "7.1", phpunit-version: "9.6" }
-                    - { php-version: "8.2", symfony-version: "7.2", phpunit-version: "9.6" }
+                    - { php-version: "8.2", symfony-version: "7.4", phpunit-version: "9.6" }
 
-                    - { php-version: "8.1", symfony-version: "6.1", phpunit-version: "10" }
-                    - { php-version: "8.1", symfony-version: "6.2", phpunit-version: "10" }
-                    - { php-version: "8.1", symfony-version: "6.3", phpunit-version: "10" }
+                    - { php-version: "8.3", symfony-version: "6.4", phpunit-version: "9.6" }
+                    - { php-version: "8.3", symfony-version: "7.4", phpunit-version: "9.6" }
+
+                    - { php-version: "8.4", symfony-version: "7.4", phpunit-version: "9.6" }
+                    - { php-version: "8.4", symfony-version: "8.0", phpunit-version: "9.6" }
+
+                    - { php-version: "8.5", symfony-version: "7.4", phpunit-version: "9.6" }
+                    - { php-version: "8.5", symfony-version: "8.0", phpunit-version: "9.6" }
+
+                    # PHPUnit 10
                     - { php-version: "8.1", symfony-version: "6.4", phpunit-version: "10" }
 
-                    - { php-version: "8.2", symfony-version: "6.1", phpunit-version: "10" }
-                    - { php-version: "8.2", symfony-version: "6.2", phpunit-version: "10" }
-                    - { php-version: "8.2", symfony-version: "6.3", phpunit-version: "10" }
                     - { php-version: "8.2", symfony-version: "6.4", phpunit-version: "10" }
-                    - { php-version: "8.2", symfony-version: "7.0", phpunit-version: "10" }
-                    - { php-version: "8.2", symfony-version: "7.1", phpunit-version: "10" }
-                    - { php-version: "8.2", symfony-version: "7.2", phpunit-version: "10" }
+                    - { php-version: "8.2", symfony-version: "7.4", phpunit-version: "10" }
 
-                    - { php-version: "8.3", symfony-version: "6.1", phpunit-version: "9.6" }
-                    - { php-version: "8.3", symfony-version: "6.2", phpunit-version: "9.6" }
-                    - { php-version: "8.3", symfony-version: "6.3", phpunit-version: "9.6" }
-                    - { php-version: "8.3", symfony-version: "6.4", phpunit-version: "9.6" }
-                    - { php-version: "8.3", symfony-version: "7.0", phpunit-version: "9.6" }
-                    - { php-version: "8.3", symfony-version: "7.1", phpunit-version: "9.6" }
-                    - { php-version: "8.3", symfony-version: "7.2", phpunit-version: "9.6" }
-
-                    - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "9.6" }
-                    - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "9.6" }
-                    - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "9.6" }
-
-                    - { php-version: "8.3", symfony-version: "6.1", phpunit-version: "10" }
-                    - { php-version: "8.3", symfony-version: "6.2", phpunit-version: "10" }
-                    - { php-version: "8.3", symfony-version: "6.3", phpunit-version: "10" }
                     - { php-version: "8.3", symfony-version: "6.4", phpunit-version: "10" }
-                    - { php-version: "8.3", symfony-version: "7.0", phpunit-version: "10" }
-                    - { php-version: "8.3", symfony-version: "7.1", phpunit-version: "10" }
-                    - { php-version: "8.3", symfony-version: "7.2", phpunit-version: "10" }
+                    - { php-version: "8.3", symfony-version: "7.4", phpunit-version: "10" }
 
-                    - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "10" }
-                    - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "10" }
-                    - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "10" }
+                    - { php-version: "8.4", symfony-version: "7.4", phpunit-version: "10" }
+                    - { php-version: "8.4", symfony-version: "8.0", phpunit-version: "10" }
 
-                    #- { php-version: "8.3", symfony-version: "6.1", phpunit-version: "11" } # Apparently conflicts with nikic/php-parser
-                    #- { php-version: "8.3", symfony-version: "6.2", phpunit-version: "11" } # Apparently conflicts with nikic/php-parser
-                    - { php-version: "8.3", symfony-version: "6.3", phpunit-version: "11" }
+                    - { php-version: "8.5", symfony-version: "7.4", phpunit-version: "10" }
+                    - { php-version: "8.5", symfony-version: "8.0", phpunit-version: "10" }
+
+                    # PHPUnit 11
                     - { php-version: "8.3", symfony-version: "6.4", phpunit-version: "11" }
-                    - { php-version: "8.3", symfony-version: "7.0", phpunit-version: "11" }
-                    - { php-version: "8.3", symfony-version: "7.1", phpunit-version: "11" }
-                    - { php-version: "8.3", symfony-version: "7.2", phpunit-version: "11" }
+                    - { php-version: "8.3", symfony-version: "7.4", phpunit-version: "11" }
 
-                    - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "11" }
-                    - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "11" }
-                    - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "11" }
+                    - { php-version: "8.4", symfony-version: "7.4", phpunit-version: "11" }
+                    - { php-version: "8.4", symfony-version: "8.0", phpunit-version: "11" }
 
-                    #- { php-version: "8.3", symfony-version: "6.1", phpunit-version: "12" } # Apparently conflicts with nikic/php-parser
-                    #- { php-version: "8.3", symfony-version: "6.2", phpunit-version: "12" } # Apparently conflicts with nikic/php-parser
-                    - { php-version: "8.3", symfony-version: "6.3", phpunit-version: "12" }
+                    - { php-version: "8.5", symfony-version: "7.4", phpunit-version: "11" }
+                    - { php-version: "8.5", symfony-version: "8.0", phpunit-version: "11" }
+
+                    # PHPUnit 12
                     - { php-version: "8.3", symfony-version: "6.4", phpunit-version: "12" }
-                    - { php-version: "8.3", symfony-version: "7.0", phpunit-version: "12" }
-                    - { php-version: "8.3", symfony-version: "7.1", phpunit-version: "12" }
-                    - { php-version: "8.3", symfony-version: "7.2", phpunit-version: "12" }
+                    - { php-version: "8.3", symfony-version: "7.4", phpunit-version: "12" }
 
-                    - { php-version: "8.4", symfony-version: "7.0", phpunit-version: "12" }
-                    - { php-version: "8.4", symfony-version: "7.1", phpunit-version: "12" }
-                    - { php-version: "8.4", symfony-version: "7.2", phpunit-version: "12" }
+                    - { php-version: "8.4", symfony-version: "7.4", phpunit-version: "12" }
+                    - { php-version: "8.4", symfony-version: "8.0", phpunit-version: "12" }
+
+                    - { php-version: "8.5", symfony-version: "7.4", phpunit-version: "12" }
+                    - { php-version: "8.5", symfony-version: "8.0", phpunit-version: "12" }
 
         name: PHP ${{ matrix.php-version }}, Symfony ${{ matrix.symfony-version }}, PHPUnit ${{ matrix.phpunit-version }}
         steps:

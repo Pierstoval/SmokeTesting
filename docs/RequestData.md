@@ -67,7 +67,29 @@ $testData = FunctionalTestData::withUrl('/')
     ->withServerParameters('APP_ENV', 'test');
 ```
 
-Note: this part is experimental, and env vars processing differs depending on how you set them up in your project.
+## Request parameters
+
+Will send these as Request parameters to the Symfony Client.
+
+Symfony adds them to `$request->request` when using HttpFoundation (which is the default).
+
+```php
+$testData = FunctionalTestData::withUrl('/')
+    ->withRequestParameter('some_data', 'value');
+```
+
+## Files
+
+Will send these as Files to the Symfony Client.
+
+Remember that you muse an instance of the `Symfony\Component\HttpFoundation\File\File` class for this when using the default test client with Symfony.
+
+Symfony adds them to `$request->files` when using HttpFoundation (which is the default).
+
+```php
+$testData = FunctionalTestData::withUrl('/')
+    ->withFile('file_name', new UploadedFile('/tmp/filename.png', 'original_filename.png'));
+```
 
 ## Execute an action before making the actual HTTP request
 

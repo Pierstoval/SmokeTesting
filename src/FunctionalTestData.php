@@ -2,6 +2,7 @@
 
 namespace Pierstoval\SmokeTesting;
 
+use Symfony\Component\HttpFoundation\File\File;
 use function count;
 
 final class FunctionalTestData {
@@ -13,6 +14,10 @@ final class FunctionalTestData {
     private array $withHttpHeaders = [];
     private array $withServerParameters = [];
     private ?string $withPayload = null;
+    private array $withRequestParameters = [];
+    /** @var array<File> */
+    private array $withFiles = [];
+
     /** @var null|\Closure */
     private ?\Closure $callbackBeforeRequest = null;
 
@@ -105,9 +110,31 @@ final class FunctionalTestData {
     {
         $new = clone $this;
         if (isset($new->withServerParameters[$name])) {
-            throw new \RuntimeException(sprintf('Request header "%s" is already defined in test data. Have you added it twice?', $name));
+            throw new \RuntimeException(sprintf('Request header "%s" is already defined in test data. Have you mistakenly added it twice?', $name));
         }
         $new->withServerParameters[$name] = $value;
+
+        return $new;
+    }
+
+    public function withRequestParameter(string $name, string $value): self
+    {
+        $new = clone $this;
+        if (isset($new->withRequestParameters[$name])) {
+            throw new \RuntimeException(sprintf('Request parameter "%s" is already defined in test data. Have you mistakenly added it twice?', $name));
+        }
+        $new->withRequestParameters[$name] = $value;
+
+        return $new;
+    }
+
+    public function withFile(string $name, File $file): self
+    {
+        $new = clone $this;
+        if (isset($new->withFiles[$name])) {
+            throw new \RuntimeException(sprintf('Request file "%s" is already defined in test data. Have you mistakenly added it twice?', $name));
+        }
+        $new->withFiles[$name] = $file;
 
         return $new;
     }
@@ -227,6 +254,16 @@ final class FunctionalTestData {
     public function getRequestPayload(): ?string
     {
         return $this->withPayload;
+    }
+
+    public function getRequestParameters(): array
+    {
+        return $this->withRequestParameters;
+    }
+
+    public function getRequestFiles(): array
+    {
+        return $this->withFiles;
     }
 
     public function getCallbackBeforeRequest(): ?\Closure
