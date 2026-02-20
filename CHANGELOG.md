@@ -1,3 +1,7 @@
+## v1.2.4
+
+* Fix typing for `FunctionalTestData->withRequestParameter()`
+
 ## v1.2.3
 
 * Add `FunctionalTestData->withFile()`

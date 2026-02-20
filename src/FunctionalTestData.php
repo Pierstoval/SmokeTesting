@@ -117,7 +117,7 @@ final class FunctionalTestData {
         return $new;
     }
 
-    public function withRequestParameter(string $name, string $value): self
+    public function withRequestParameter(string $name, mixed $value): self
     {
         $new = clone $this;
         if (isset($new->withRequestParameters[$name])) {
