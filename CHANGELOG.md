@@ -1,3 +1,7 @@
+## v1.2.5
+
+* Fix: don't re-scope the expectation callback, to avoid issues with static closures
+
 ## v1.2.4
 
 * Fix typing for `FunctionalTestData->withRequestParameter()`

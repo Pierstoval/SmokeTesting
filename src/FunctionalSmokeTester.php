@@ -149,7 +149,6 @@ trait FunctionalSmokeTester
 
         if ($callbacks = $testData->getExpectationCallables()) {
             foreach ($callbacks as $callback) {
-                $callback = \Closure::fromCallable($callback)->bindTo($this, static::class);
                 $callback($client, $crawler);
             }
         }
