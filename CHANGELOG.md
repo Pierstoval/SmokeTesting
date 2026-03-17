@@ -1,3 +1,7 @@
+## v1.2.6
+
+* Fix: Update json regex to fit more different types of json (ld, problem...)
+
 ## v1.2.5
 
 * Fix: don't re-scope the expectation callback, to avoid issues with static closures

@@ -127,7 +127,7 @@ trait FunctionalSmokeTester
 
         if ($testData->getIsJsonResponseExpectation()) {
             $header = $res->headers->get('Content-Type');
-            Assert::assertMatchesRegularExpression('~application/(ld\+)?json~iU', $header);
+            Assert::assertMatchesRegularExpression('~application/(\w+\+)?json~iU', $header);
 
             $resBody = $res->getContent();
             $json = @json_decode($resBody, true);
