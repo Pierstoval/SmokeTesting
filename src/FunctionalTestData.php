@@ -3,9 +3,11 @@
 namespace Pierstoval\SmokeTesting;
 
 use Symfony\Component\HttpFoundation\File\File;
+
 use function count;
 
-final class FunctionalTestData {
+final class FunctionalTestData
+{
     // Request information
     private string $url;
     private ?string $withHost = null;
@@ -147,7 +149,8 @@ final class FunctionalTestData {
         return $new;
     }
 
-    public function expectStatusCode(int $statusCode): self {
+    public function expectStatusCode(int $statusCode): self
+    {
         $new = clone $this;
         $new->expectStatusCode = $statusCode;
 

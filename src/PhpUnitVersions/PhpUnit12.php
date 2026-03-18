@@ -5,14 +5,15 @@ namespace Pierstoval\SmokeTesting\PhpUnitVersions;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Pierstoval\SmokeTesting\RoutesExtractor;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use function is_a;
-use function sprintf;
 use Generator;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Test\TestContainer;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
+
+use function is_a;
+use function sprintf;
 
 abstract class PhpUnit12 extends WebTestCase
 {

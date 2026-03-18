@@ -5,7 +5,6 @@ namespace Pierstoval\SmokeTesting;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Pierstoval\SmokeTesting\PhpUnitVersions\PhpUnit9;
 use Pierstoval\SmokeTesting\PhpUnitVersions\PhpUnit12;
-
 use PHPUnit\Runner\Version;
 
 if (((float) Version::series()) < 12) {

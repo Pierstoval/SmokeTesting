@@ -52,7 +52,7 @@ final class RoutesExtractor
                 continue;
             }
 
-            $hasDynamicScheme = \array_filter(\array_map(static fn($item) => \str_contains($item, '{'), $route->getSchemes()));
+            $hasDynamicScheme = \array_filter(\array_map(static fn ($item) => \str_contains($item, '{'), $route->getSchemes()));
             if ($hasDynamicScheme) {
                 continue;
             }

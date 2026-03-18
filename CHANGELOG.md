@@ -1,3 +1,8 @@
+## v1.2.7
+
+* CS fixes
+* Update tests, and unit-test the `FunctionalSmokeTester` class
+
 ## v1.2.6
 
 * Fix: Update json regex to fit more different types of json (ld, problem...)

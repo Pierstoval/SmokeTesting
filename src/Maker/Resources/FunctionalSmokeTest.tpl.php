@@ -17,7 +17,9 @@ class <?php echo $class_name ?? 'UndefinedClassName' ?> extends WebTestCase
 <?php endif; ?>
 <?php foreach ($routes ?? [] as $route): ?>
 
-    public function testRoute<?php echo ucfirst(preg_replace_callback('~_([a-z0-9])~isUu', function($matches) {return strtoupper($matches[1]);}, $route['routeName'])).'WithMethod'.ucfirst(strtolower($route['httpMethod'])); ?>(): void
+    public function testRoute<?php echo ucfirst(preg_replace_callback('~_([a-z0-9])~isUu', function ($matches) {
+        return strtoupper($matches[1]);
+    }, $route['routeName'])).'WithMethod'.ucfirst(strtolower($route['httpMethod'])); ?>(): void
     {
 <?php if ($with_dto ?? false): ?>
         $this->runFunctionalTest(

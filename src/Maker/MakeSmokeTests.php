@@ -47,7 +47,8 @@ class MakeSmokeTests extends AbstractMaker
         if ($input->getOption('use-attributes') && $input->getOption('use-provider')) {
             throw new \RuntimeException(\sprintf(
                 'Cannot set both "%s" and "%s" attribute at the same time. Use only one of them.',
-                    'use-attributes', 'use-provider'
+                'use-attributes',
+                'use-provider'
             ));
         }
     }

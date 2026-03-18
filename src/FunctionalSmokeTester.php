@@ -5,26 +5,31 @@ namespace Pierstoval\SmokeTesting;
 use PHPUnit\Framework\Assert;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
 use function is_array;
 use function sprintf;
 use function str_replace;
 use function strtoupper;
+
 use const JSON_ERROR_NONE;
 
 trait FunctionalSmokeTester
 {
-    public function runFunctionalTest(FunctionalTestData $testData): void {
+    public function runFunctionalTest(FunctionalTestData $testData): void
+    {
         if (!$this instanceof WebTestCase) {
             throw new \Exception(
-                sprintf('The "%s" trait can only be used in an instance of "%s"', self::class, WebTestCase::class));
+                sprintf('The "%s" trait can only be used in an instance of "%s"', self::class, WebTestCase::class)
+            );
         }
 
         if (!$testData->hasExpectations()) {
             throw new \Exception(
                 sprintf(
-                'No expectations were provided in the "%s" object. You must provide at least one.',
-                FunctionalTestData::class,
-            ));
+                    'No expectations were provided in the "%s" object. You must provide at least one.',
+                    FunctionalTestData::class,
+                )
+            );
         }
 
         $client = $this->getHttpClientInternal($testData->getRequestHost());

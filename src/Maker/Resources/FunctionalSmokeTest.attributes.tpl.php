@@ -18,8 +18,10 @@ class <?php echo $class_name ?? 'UndefinedClassName' ?> extends WebTestCase
     use FunctionalSmokeTester;
 <?php endif; ?>
 
-<?php foreach ($routes ?? [] as $route){
-    if (str_starts_with($route['routePath'], '/_')) { continue; } ?>
+<?php foreach ($routes ?? [] as $route) {
+    if (str_starts_with($route['routePath'], '/_')) {
+        continue;
+    } ?>
     #[TestWith(['<?php echo $route['httpMethod']; ?>', '<?php echo $route['routePath']; ?>', '<?php echo $route['routeName']; ?>'])]
 <?php } ?>
     #[TestDox('$method $url ($route)')]

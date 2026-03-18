@@ -51,7 +51,7 @@ class FixtureAppTest extends TestCase
         self::assertNotNull($exception = $this->runFixtureTest('testGetWithMissingJsonResponseHeader'));
 
         self::assertInstanceOf(ExpectationFailedException::class, $exception);
-        self::assertSame('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~application/(ld\+)?json~iU".', $exception->getMessage());
+        self::assertSame('Failed asserting that \'text/html; charset=UTF-8\' matches PCRE pattern "~application/(\w+\+)?json~iU".', $exception->getMessage());
     }
 
     public function testGetWithInvalidJson(): void

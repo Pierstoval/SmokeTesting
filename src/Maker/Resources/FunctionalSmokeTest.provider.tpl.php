@@ -20,17 +20,17 @@ class <?php echo $class_name ?? 'UndefinedClassName' ?> extends WebTestCase
     public static function provideRoutes(): \Generator
     {
         <?php foreach ($routes ?? [] as $route) {
-        if (\str_starts_with($route['routePath'], '/_')) {
-            continue;
-        }
-        echo \sprintf(
-            "yield '%s %s' => ['%s', '%s', '%s'];\n        ",
-            $route['httpMethod'],
-            $route['routePath'],
-            $route['httpMethod'],
-            $route['routePath'],
-            $route['routeName']
-        );
+            if (\str_starts_with($route['routePath'], '/_')) {
+                continue;
+            }
+            echo \sprintf(
+                "yield '%s %s' => ['%s', '%s', '%s'];\n        ",
+                $route['httpMethod'],
+                $route['routePath'],
+                $route['httpMethod'],
+                $route['routePath'],
+                $route['routeName']
+            );
         } ?>
 
     }
